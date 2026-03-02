@@ -1,0 +1,5 @@
+../Core/Src/lcd.c:15:13:lcd_write_cmd	1
+../Core/Src/lcd.c:23:13:lcd_write_data	1
+../Core/Src/lcd.c:31:13:lcd_write_data_byte	1
+../Core/Src/lcd.c:36:6:LCD_Init	1
+../Core/Src/lcd.c:61:6:LCD_FillScreen	2

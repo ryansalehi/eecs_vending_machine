@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
+#include "image_rgb888.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -366,14 +367,10 @@ void StartTask2(void *argument)
 	LCD_Init();
 	for(;;)
 	{
-		LCD_FillScreen(255,0,0);
-		vTaskDelay(pdMS_TO_TICKS(1000));
-
-		LCD_FillScreen(0,255,0);
-		vTaskDelay(pdMS_TO_TICKS(1000));
-
-		LCD_FillScreen(0,0,255);
-		vTaskDelay(pdMS_TO_TICKS(1000));
+		LCD_DrawImageRGB888(image_rgb888, 480, 320);
+		//LCD_DrawImageRGB565_AsRGB666(image_rgb565, 480, 320);
+		//vTaskDelay(pdMS_TO_TICKS(1000));
+		vTaskSuspend(NULL);
 	}
   /* USER CODE END StartTask2 */
 }

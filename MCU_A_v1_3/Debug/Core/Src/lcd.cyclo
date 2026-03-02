@@ -1,5 +1,8 @@
-../Core/Src/lcd.c:15:13:lcd_write_cmd	1
-../Core/Src/lcd.c:23:13:lcd_write_data	1
-../Core/Src/lcd.c:31:13:lcd_write_data_byte	1
-../Core/Src/lcd.c:36:6:LCD_Init	1
-../Core/Src/lcd.c:61:6:LCD_FillScreen	2
+../Core/Src/lcd.c:16:13:lcd_write_cmd	1
+../Core/Src/lcd.c:24:13:lcd_write_data	1
+../Core/Src/lcd.c:32:13:lcd_write_data_byte	1
+../Core/Src/lcd.c:37:6:LCD_Init	1
+../Core/Src/lcd.c:68:6:LCD_FillScreen	2
+../Core/Src/lcd.c:104:6:LCD_SetWindow	1
+../Core/Src/lcd.c:121:6:LCD_DrawTestGradient	3
+../Core/Src/lcd.c:145:6:LCD_DrawImageRGB888	2

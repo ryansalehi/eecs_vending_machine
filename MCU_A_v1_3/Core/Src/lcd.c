@@ -42,7 +42,6 @@ typedef struct
         struct
         {
             const uint8_t *img; // pointer to RGB888 image in flash
-            uint16_t stride_bytes;
         } blit;
         struct
         {
@@ -138,10 +137,10 @@ void LCD_Init(void)
     lcd_write_cmd(0x29);
 
     // Start with blank screen
-    LCD_FillScreen(255, 255, 255);
+    LCD_FillScreen(228, 228, 228);
 
     LCD_BeginFrame();
-    LCD_DrawImageRGB888(0, 0, 480, 70, header_480_70, 200);
+    LCD_DrawImageRGB888(0, 0, 480, 70, header_480_70);
     LCD_EndFrame();
 }
 
@@ -172,7 +171,7 @@ static void LCD_Render_Op(lcd_op_t*op)
     }
     else // OP_TEXT
     {
-
+        
     }
 }
 
@@ -236,8 +235,7 @@ void LCD_FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
 /**
  * @pre lcdFrameMutex must be owned by caller (obtained through LCD_BeginFrame)
  */
-void LCD_DrawImageRGB888(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
-                         const uint8_t *img, uint16_t stride_bytes)
+void LCD_DrawImageRGB888(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *img)
 {
     // out of bounds
     if (x >= LCD_WIDTH || y >= LCD_HEIGHT)
@@ -256,38 +254,40 @@ void LCD_DrawImageRGB888(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
     op.bounds.w = w;
     op.bounds.h = h;
     op.u.blit.img = img;
-    op.u.blit.stride_bytes = (uint16_t)(w * 3);
     cbuf_push_overwrite(&requests, &op);
 }
 
 /**
  * @pre lcdFrameMutex must be owned by caller (obtained through LCD_BeginFrame)
  */
-void LCD_DrawText(uint16_t x, uint16_t y, const char *str,
-                  uint16_t color565, uint8_t scale)
+void LCD_DrawText(uint16_t x, uint16_t y, const char *s, uint16_t color565, uint8_t scale)
 {
-    // out of bounds
-    if (x >= LCD_WIDTH || y >= LCD_HEIGHT)
+    if(!s) 
     {
         return;
     }
+    if(scale == 0)
+    {
+        scale = 1;
+    }
+
     lcd_op_t op;
     op.type = OP_TEXT;
     op.bounds.x = x;
     op.bounds.y = y;
-    // estimate width: each char ~6*scale
-    size_t len = strnlen(str, LCD_MAX_TEXT_LEN - 1);
-    uint16_t w = (uint16_t)(len * 6 * (scale ? scale : 1));
-    op.bounds.w = w;
-    op.bounds.h = (uint16_t)(7 * (scale ? scale : 1));
-    strncpy(op.u.text.text, str, LCD_MAX_TEXT_LEN - 1);
-    op.u.text.text[LCD_MAX_TEXT_LEN - 1] = '\0';
+
+    size_t len = strnlen(s, LCD_MAX_TEXT_LEN - 1);
+    memcpy(op.u.text.text, s, len);
+    op.u.text.text[len] = '\0';
+
     op.u.text.color565 = color565;
-    op.u.text.scale = (scale ? scale : 1);
+    op.u.text.scale = scale;
+
+    op.bounds.w = (uint16_t)(len * 6 * scale);
+    op.bounds.h = (uint16_t)(7 * scale);
+
     cbuf_push_overwrite(&requests, &op);
 }
-
-
 
 /**
  * Test/specific use

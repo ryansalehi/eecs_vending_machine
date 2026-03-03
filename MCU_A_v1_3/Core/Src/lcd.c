@@ -1,6 +1,6 @@
 
 #include "lcd.h"
-
+#include "header_480_70.h"
 #define LCD_CS_LOW()   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET)
 #define LCD_CS_HIGH()  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET)
 
@@ -139,6 +139,10 @@ void LCD_Init(void)
 
     // Start with blank screen
     LCD_FillScreen(255, 255, 255);
+
+    LCD_BeginFrame();
+    LCD_DrawImageRGB888(0, 0, 480, 70, header_480_70, 200);
+    LCD_EndFrame();
 }
 
 static void LCD_Render_Op(lcd_op_t*op)

@@ -25,6 +25,7 @@
 #include "lcd.h"
 #include "image_rgb888.h"
 #include "umich_100_100.h"
+#include "umich_140_100.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -379,16 +380,14 @@ void StartTask1(void *argument)
     LCD_BeginFrame();
     if(val % 2 == 0)
     {
-      LCD_FillRect(100, 100, 100, 100, 255, 0, 0);
-      LCD_FillRect(200, 200, 100, 100, 0, 255, 0);
+      LCD_FillRect(470, 0, 10, 10, 0, 39, 76);
     }
     else
     {
-      LCD_FillRect(100, 100, 100, 100, 0, 255, 0);
-      LCD_FillRect(200, 200, 100, 100, 255, 0, 0);
+      LCD_FillRect(470, 0, 10, 10, 0, 255, 0);
     }
     LCD_EndFrame();
-	  osDelay(500);                          // DO NOT use HAL_Delay() here
+	  osDelay(1000);                          // DO NOT use HAL_Delay() here
   }
   /* USER CODE END 5 */
 }
@@ -426,9 +425,9 @@ void StartTask03(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  LCD_BeginFrame();
-	  LCD_DrawImageRGB888(200, 100, 100, 100, umich_100_100, 200);
-	  LCD_EndFrame();
+	  // LCD_BeginFrame();
+	  // LCD_DrawImageRGB888(480-140, 0, 140, 100, umich_140_100, 200);
+	  // LCD_EndFrame();
     osDelay(1);
   }
   /* USER CODE END StartTask03 */

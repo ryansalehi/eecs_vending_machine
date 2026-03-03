@@ -13,6 +13,9 @@
 #define LCD_WIDTH 480
 #define LCD_HEIGHT 320
 #define LCD_MAX_TEXT_LEN 64
+#define FONT5X7_WIDTH 5
+#define FONT5X7_HEIGHT 7
+#define FONT5X7_ADVANCE 6
 
 // Operation types
 typedef enum
@@ -58,6 +61,7 @@ static osSemaphoreId_t lcdRenderSem; // The LCD Task waits on this to send to ne
 static osMutexId_t lcdFrameMutex; // Other tasks will lock this mutex when pushing a frame
 static lcd_op_t requestsArray[10]; // TODO: larger?
 static cbuf_t requests;
+static void LCD_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 
 static void lcd_write_cmd(uint8_t cmd)
 {
@@ -67,17 +71,124 @@ static void lcd_write_cmd(uint8_t cmd)
     LCD_CS_HIGH();
 }
 
-static void lcd_write_data(uint8_t *data, uint16_t size)
+static void lcd_write_data(const uint8_t *data, uint16_t size)
 {
 	LCD_DC_DATA();
 	LCD_CS_LOW();
-    HAL_SPI_Transmit(&hspi1, data, size, HAL_MAX_DELAY);
+    HAL_SPI_Transmit(&hspi1, (uint8_t *)data, size, HAL_MAX_DELAY);
     LCD_CS_HIGH();
 }
 
 static void lcd_write_data_byte(uint8_t data)
 {
 	lcd_write_data(&data, 1);
+}
+
+static void lcd_rgb565_to_rgb888(uint16_t color565, uint8_t rgb[3])
+{
+    uint8_t r5 = (uint8_t)((color565 >> 11) & 0x1F);
+    uint8_t g6 = (uint8_t)((color565 >> 5) & 0x3F);
+    uint8_t b5 = (uint8_t)(color565 & 0x1F);
+
+    rgb[0] = (uint8_t)((r5 << 3) | (r5 >> 2));
+    rgb[1] = (uint8_t)((g6 << 2) | (g6 >> 4));
+    rgb[2] = (uint8_t)((b5 << 3) | (b5 >> 2));
+}
+
+static void lcd_write_solid_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t pixel[3])
+{
+    if (w == 0 || h == 0 || x >= LCD_WIDTH || y >= LCD_HEIGHT)
+    {
+        return;
+    }
+    if ((uint32_t)x + w > LCD_WIDTH)
+    {
+        w = (uint16_t)(LCD_WIDTH - x);
+    }
+    if ((uint32_t)y + h > LCD_HEIGHT)
+    {
+        h = (uint16_t)(LCD_HEIGHT - y);
+    }
+
+    LCD_SetWindow(x, y, x + w - 1, y + h - 1);
+    lcd_write_cmd(0x2C);
+
+    size_t numPixels = (size_t)w * h;
+    for (size_t i = 0; i < numPixels; i++)
+    {
+        lcd_write_data(pixel, 3);
+    }
+}
+
+static void lcd_render_text_op(const lcd_op_t *op)
+{
+    uint8_t fg[3];
+    uint8_t scale = op->u.text.scale == 0 ? 1 : op->u.text.scale;
+    uint32_t cursorX = op->bounds.x;
+    uint32_t cursorY = op->bounds.y;
+    uint32_t startX = op->bounds.x;
+
+    lcd_rgb565_to_rgb888(op->u.text.color565, fg);
+
+    for (size_t i = 0; op->u.text.text[i] != '\0'; i++)
+    {
+        uint8_t c = (uint8_t)op->u.text.text[i];
+        if (c == '\r')
+        {
+            continue;
+        }
+        if (c == '\n')
+        {
+            cursorX = startX;
+            cursorY += (FONT5X7_HEIGHT + 1U) * scale;
+            continue;
+        }
+        if (c < 32 || c > 127)
+        {
+            c = '?';
+        }
+
+        const uint8_t *glyph = font5x7[c - 32];
+        for (uint8_t row = 0; row < FONT5X7_HEIGHT; row++)
+        {
+            for (uint8_t sy = 0; sy < scale; sy++)
+            {
+                uint32_t dstY32 = cursorY + row * scale + sy;
+                if (dstY32 >= LCD_HEIGHT)
+                {
+                    continue;
+                }
+                uint16_t dstY = (uint16_t)dstY32;
+
+                uint8_t col = 0;
+                while (col < FONT5X7_WIDTH)
+                {
+                    while (col < FONT5X7_WIDTH && ((glyph[col] >> row) & 0x01U) == 0U)
+                    {
+                        col++;
+                    }
+                    uint8_t runStart = col;
+                    while (col < FONT5X7_WIDTH && ((glyph[col] >> row) & 0x01U) != 0U)
+                    {
+                        col++;
+                    }
+                    if (runStart < col)
+                    {
+                        uint32_t runX32 = cursorX + runStart * scale;
+                        if (runX32 >= LCD_WIDTH)
+                        {
+                            continue;
+                        }
+                        uint16_t runX = (uint16_t)runX32;
+                        uint16_t runW = (uint16_t)((col - runStart) * scale);
+                        lcd_write_solid_rect(runX, dstY, runW, 1, fg);
+                    }
+                }
+            }
+        }
+
+        cursorX += FONT5X7_ADVANCE * scale;
+    }
 }
 
 static void LCD_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
@@ -151,27 +262,43 @@ static void LCD_Render_Op(lcd_op_t*op)
         // Something went wrong
         return;
     }
-    LCD_SetWindow(op->bounds.x, op->bounds.y, op->bounds.x + op->bounds.w - 1, op->bounds.y + op->bounds.h - 1);
-    lcd_write_cmd(0x2C); // memory write
+
     if(op->type == OP_FILL_RECT)
     {
-        size_t numPixels = op->bounds.w * op->bounds.h;
-        for(size_t i = 0; i < numPixels; i++)
-        {
-            uint8_t pixel[3] = {op->u.fill.r, op->u.fill.g, op->u.fill.b};
-            lcd_write_data(pixel, 3);
-        }
+        uint8_t pixel[3] = {op->u.fill.r, op->u.fill.g, op->u.fill.b};
+        lcd_write_solid_rect(op->bounds.x, op->bounds.y, op->bounds.w, op->bounds.h, pixel);
     }
     else if(op->type == OP_BLIT_RGB888)
     {
-        for(size_t y = 0; y < op->bounds.h; y++)
+        uint16_t x = op->bounds.x;
+        uint16_t y0 = op->bounds.y;
+        uint16_t w = op->bounds.w;
+        uint16_t h = op->bounds.h;
+
+        if (x >= LCD_WIDTH || y0 >= LCD_HEIGHT || w == 0 || h == 0)
         {
-            lcd_write_data(op->u.blit.img + y * op->bounds.w * 3, op->bounds.w * 3);
+            return;
+        }
+        if ((uint32_t)x + w > LCD_WIDTH)
+        {
+            w = (uint16_t)(LCD_WIDTH - x);
+        }
+        if ((uint32_t)y0 + h > LCD_HEIGHT)
+        {
+            h = (uint16_t)(LCD_HEIGHT - y0);
+        }
+
+        LCD_SetWindow(x, y0, x + w - 1, y0 + h - 1);
+        lcd_write_cmd(0x2C); // memory write
+
+        for(size_t row = 0; row < h; row++)
+        {
+            lcd_write_data(op->u.blit.img + row * op->bounds.w * 3, w * 3);
         }
     }
     else // OP_TEXT
     {
-        
+        lcd_render_text_op(op);
     }
 }
 
@@ -266,6 +393,10 @@ void LCD_DrawText(uint16_t x, uint16_t y, const char *s, uint16_t color565, uint
     {
         return;
     }
+    if (x >= LCD_WIDTH || y >= LCD_HEIGHT)
+    {
+        return;
+    }
     if(scale == 0)
     {
         scale = 1;
@@ -283,8 +414,15 @@ void LCD_DrawText(uint16_t x, uint16_t y, const char *s, uint16_t color565, uint
     op.u.text.color565 = color565;
     op.u.text.scale = scale;
 
-    op.bounds.w = (uint16_t)(len * 6 * scale);
-    op.bounds.h = (uint16_t)(7 * scale);
+    if (len == 0)
+    {
+        return;
+    }
+
+    uint32_t textW = (uint32_t)len * FONT5X7_ADVANCE * scale;
+    uint32_t textH = (uint32_t)FONT5X7_HEIGHT * scale;
+    op.bounds.w = textW > UINT16_MAX ? UINT16_MAX : (uint16_t)textW;
+    op.bounds.h = textH > UINT16_MAX ? UINT16_MAX : (uint16_t)textH;
 
     cbuf_push_overwrite(&requests, &op);
 }

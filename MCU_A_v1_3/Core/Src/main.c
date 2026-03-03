@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
 #include "image_rgb888.h"
+#include "umich_100_100.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,10 +52,17 @@ const osThreadAttr_t task1_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for task2 */
-osThreadId_t task2Handle;
-const osThreadAttr_t task2_attributes = {
-  .name = "task2",
+/* Definitions for LCD_Task */
+osThreadId_t LCD_TaskHandle;
+const osThreadAttr_t LCD_Task_attributes = {
+  .name = "LCD_Task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for myTask03 */
+osThreadId_t myTask03Handle;
+const osThreadAttr_t myTask03_attributes = {
+  .name = "myTask03",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
@@ -67,7 +75,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 void StartTask1(void *argument);
-void StartTask2(void *argument);
+void LCDTask(void *argument);
+void StartTask03(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -121,6 +130,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
+  LCD_Init();
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -135,8 +145,11 @@ int main(void)
   /* creation of task1 */
   task1Handle = osThreadNew(StartTask1, NULL, &task1_attributes);
 
-  /* creation of task2 */
-  task2Handle = osThreadNew(StartTask2, NULL, &task2_attributes);
+  /* creation of LCD_Task */
+  LCD_TaskHandle = osThreadNew(LCDTask, NULL, &LCD_Task_attributes);
+
+  /* creation of myTask03 */
+  myTask03Handle = osThreadNew(StartTask03, NULL, &myTask03_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -358,34 +371,67 @@ void StartTask1(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
+  uint8_t val = 0;
   for(;;)
   {
+    val++;
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle Blue LED
+    LCD_BeginFrame();
+    if(val % 2 == 0)
+    {
+      LCD_FillRect(100, 100, 100, 100, 255, 0, 0);
+      LCD_FillRect(200, 200, 100, 100, 0, 255, 0);
+    }
+    else
+    {
+      LCD_FillRect(100, 100, 100, 100, 0, 255, 0);
+      LCD_FillRect(200, 200, 100, 100, 255, 0, 0);
+    }
+    LCD_EndFrame();
 	  osDelay(500);                          // DO NOT use HAL_Delay() here
   }
   /* USER CODE END 5 */
 }
 
-/* USER CODE BEGIN Header_StartTask2 */
+/* USER CODE BEGIN Header_LCDTask */
 /**
-* @brief Function implementing the task2 thread.
+* @brief Function implementing the LCD_Task thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_StartTask2 */
-void StartTask2(void *argument)
+/* USER CODE END Header_LCDTask */
+void LCDTask(void *argument)
 {
-  /* USER CODE BEGIN StartTask2 */
+  /* USER CODE BEGIN LCDTask */
 	/* Infinite loop */
-	LCD_Init();
+	
 	for(;;)
 	{
-		LCD_DrawImageRGB888(image_rgb888, 480, 320);
-		//LCD_DrawImageRGB565_AsRGB666(image_rgb565, 480, 320);
-		//vTaskDelay(pdMS_TO_TICKS(1000));
-		vTaskSuspend(NULL);
+    LCD_Render();
+		osDelay(1);
 	}
-  /* USER CODE END StartTask2 */
+  /* USER CODE END LCDTask */
+}
+
+/* USER CODE BEGIN Header_StartTask03 */
+/**
+* @brief Function implementing the myTask03 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask03 */
+void StartTask03(void *argument)
+{
+  /* USER CODE BEGIN StartTask03 */
+  /* Infinite loop */
+  for(;;)
+  {
+	  LCD_BeginFrame();
+	  LCD_DrawImageRGB888(200, 100, 100, 100, umich_100_100, 200);
+	  LCD_EndFrame();
+    osDelay(1);
+  }
+  /* USER CODE END StartTask03 */
 }
 
 /**

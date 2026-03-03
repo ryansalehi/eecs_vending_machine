@@ -425,9 +425,9 @@ void StartTask03(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  // LCD_BeginFrame();
-	  // LCD_DrawImageRGB888(480-140, 0, 140, 100, umich_140_100, 200);
-	  // LCD_EndFrame();
+	  LCD_BeginFrame();
+	  LCD_DrawText(100, 100, "Hello", 45, 40);
+	  LCD_EndFrame();
     osDelay(1);
   }
   /* USER CODE END StartTask03 */

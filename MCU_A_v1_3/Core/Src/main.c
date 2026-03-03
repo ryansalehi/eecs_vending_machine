@@ -373,6 +373,8 @@ void StartTask1(void *argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   uint8_t val = 0;
+  char user[10] = "none";
+  char level[15] = "unauthorized";
   for(;;)
   {
     val++;
@@ -386,6 +388,10 @@ void StartTask1(void *argument)
     {
       LCD_FillRect(470, 0, 10, 10, 0, 255, 0);
     }
+    LCD_DrawText(15, 290, "user: ", 155, 2);
+    LCD_DrawText(80, 290, user, 155, 2);
+    LCD_DrawText(240, 290, "level: ", 155, 2);
+    LCD_DrawText(320, 290, level, 155, 2);
     LCD_EndFrame();
 	  osDelay(1000);                          // DO NOT use HAL_Delay() here
   }
@@ -426,7 +432,10 @@ void StartTask03(void *argument)
   for(;;)
   {
 	  LCD_BeginFrame();
-	  LCD_DrawText(100, 100, "Hello", 45, 40);
+	  LCD_DrawText(60, 100, "Welcome to the EECS", 45, 3);
+    LCD_DrawText(38, 128, "sticker vending machine!", 45, 3);
+    LCD_DrawText(38, 175, "Please swipe your MCard", 45, 3);
+    LCD_DrawText(80, 203, "to get started.", 45, 3);
 	  LCD_EndFrame();
     osDelay(1);
   }

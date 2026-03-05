@@ -54,5 +54,29 @@ dkms.conf
 # debug information files
 *.dwo
 
-*.metadata
-*.settings
+# STM32CubeIDE/Eclipse specific files
+/.settings/
+.cproject
+.mxproject
+.project
+.metadata/
+*.launch
+*.markers
+
+#build artifacts
+/Debug/
+/Release/
+build/
+Build/
+*/*.d
+*/*.o
+*/*.su
+*/*.map
+*/*.elf
+*/*.hex
+*/*.bin
+*/*.lst
+*/*.srec
+*/*.cycles
+*/*.size
+

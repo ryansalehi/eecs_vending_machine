@@ -55,6 +55,7 @@ dkms.conf
 *.dwo
 
 # STM32CubeIDE/Eclipse specific files
+**/.settings/
 /.settings/
 .cproject
 .mxproject

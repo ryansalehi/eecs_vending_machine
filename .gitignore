@@ -64,6 +64,7 @@ dkms.conf
 *.markers
 
 #build artifacts
+*/Debug/
 /Debug/
 /Release/
 build/

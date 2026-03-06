@@ -23,9 +23,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
-#include "image_rgb888.h"
-#include "umich_100_100.h"
-#include "umich_140_100.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

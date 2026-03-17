@@ -24,3 +24,7 @@ Token NFC:
 - PB9 SDA
 - PC13 IRQ
 - PA10 RESET
+
+PS/2 Magstripe Reader:
+- PC0 CLOCK
+- PC1 DATA

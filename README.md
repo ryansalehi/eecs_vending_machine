@@ -28,15 +28,29 @@ Keypad:
 - PC13 COL3
 - PC14 COL4
 
+UART:
+- PA2 UART_TX
+- PA3 UART_RX
+
 TODO: assign motor pins
-  
+
+////////////////////////////
+
 # MCU_B Pinout
 Token NFC:
 - PB8 SCL
 - PB9 SDA
 - PC13 IRQ
-- PA10 RESET
+- PA8 RESET
 
 PS/2 Magstripe Reader:
 - PC0 CLOCK
 - PC1 DATA
+
+UART:
+- PA2 UART_TX
+- PA3 UART_RX
+
+DOOR LATCHES:
+- PC2 LATCH1
+- PC3 LATCH2

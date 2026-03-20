@@ -14,10 +14,22 @@ LCD:
 - PB0 RESET
 - PB1 DC
 - PA7 MOSI
-- PB6 MISO
-- PA5 SCK
+- PA6 MISO
+- PB3 SCK
 - 3.3V LED
 
+Keypad:
+- PC10 ROW1
+- PC12 ROW2
+- PA13 ROW3
+- PA14 ROW4
+- PA15 COL1
+- PB7  COL2
+- PC13 COL3
+- PC14 COL4
+
+TODO: assign motor pins
+  
 # MCU_B Pinout
 Token NFC:
 - PB8 SCL

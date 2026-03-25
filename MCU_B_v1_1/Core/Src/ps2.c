@@ -8,8 +8,16 @@ static volatile uint8_t ps2_current_byte = 0;
 static volatile uint8_t ps2_parity_bit = 0;
 static volatile uint8_t ps2_last_byte = 0;
 
+/* timeout value for end-of-message detection */
+# define PS2_MESSAGE_TIMEOUT_MS 25
+
 static volatile bool ps2_read_successful = false;
 static volatile bool ps2_read_failed = false;
+
+static volatile uint8_t ps2_message[PS2_MESSAGE_MAX];
+static volatile uint16_t ps2_message_length = 0;
+static volatile bool ps2_message_ready = false;
+static volatile uint32_t ps2_last_byte_tick = 0;
 
 static uint8_t PS2_ReadDataPin(void);
 static bool PS2_CheckOddParity(uint8_t data, uint8_t parity_bit);
@@ -25,6 +33,10 @@ void PS2_Init(void)
 
     ps2_read_successful = false;
     ps2_read_failed = false;
+
+    ps2_message_length = 0;
+    ps2_message_ready = false;
+    ps2_last_byte_tick = 0;
 }
 
 //called once per falling clock edge from the interrupt callback
@@ -71,6 +83,19 @@ void PS2_ClockEdgeFromIsr(void)
         		ps2_last_byte = ps2_current_byte;
         		ps2_read_successful = true;
         		ps2_read_failed = false;
+
+        		if (ps2_message_length < PS2_MESSAGE_MAX)
+				{
+					ps2_message[ps2_message_length] = ps2_current_byte;
+					ps2_message_length++;
+					ps2_last_byte_tick = HAL_GetTick();
+					ps2_message_ready = false;
+				}
+				else
+				{
+					// buffer overflow
+					ps2_read_failed = true;
+				}
         	}
         	else
         	{
@@ -116,6 +141,63 @@ bool PS2_GetByte(uint8_t *byte)
 	ps2_read_successful = false;
 	return true;
 }
+
+void PS2_CheckMessageTimeout(void)
+{
+    if ((ps2_message_length > 0U) &&
+        (ps2_message_ready == false) &&
+        ((HAL_GetTick() - ps2_last_byte_tick) > PS2_MESSAGE_TIMEOUT_MS))
+    {
+        ps2_message_ready = true;
+    }
+}
+
+bool PS2_MessageReady(void)
+{
+    return ps2_message_ready;
+}
+
+uint16_t PS2_GetMessage(uint8_t *buffer, uint16_t buffer_size)
+{
+    uint16_t i;
+    uint16_t copy_length;
+
+    if ((buffer == NULL) || (buffer_size == 0U) || (ps2_message_ready == false))
+    {
+        return 0U;
+    }
+
+    __disable_irq();
+
+    copy_length = ps2_message_length;
+    if (copy_length > buffer_size)
+    {
+        copy_length = buffer_size;
+    }
+
+    for (i = 0; i < copy_length; i++)
+    {
+        buffer[i] = ps2_message[i];
+    }
+
+    ps2_message_length = 0;
+    ps2_message_ready = false;
+    ps2_last_byte_tick = 0;
+
+    __enable_irq();
+
+    return copy_length;
+}
+
+void PS2_ClearMessage(void)
+{
+    __disable_irq();
+    ps2_message_length = 0;
+    ps2_message_ready = false;
+    ps2_last_byte_tick = 0;
+    __enable_irq();
+}
+
 
 static uint8_t PS2_ReadDataPin(void)
 {

@@ -7,6 +7,8 @@
 //resets the receiver state
 void PS2_Init(void);
 
+# define PS2_MESSAGE_MAX 500
+
 //called once per falling clock edge from the interrupt callback
 void PS2_ClockEdgeFromIsr(void);
 
@@ -18,4 +20,12 @@ bool PS2_ReadFailed(void);
 
 //gives you the decoded byte when it is ready
 bool PS2_GetByte(uint8_t *byte);
+
+void PS2_CheckMessageTimeout(void);
+
+bool PS2_MessageReady(void);
+
+uint16_t PS2_GetMessage(uint8_t *buffer, uint16_t buffer_size);
+
+void PS2_ClearMessage(void);
 #endif /* PS2_H */

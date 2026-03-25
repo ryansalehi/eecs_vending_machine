@@ -33,7 +33,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -84,6 +83,8 @@ void NFCTask(void *argument);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 bool authenticated = false;
+static uint8_t ps2_byte_message[PS2_MESSAGE_MAX];
+static uint16_t ps2_byte_message_length = 0;
 /* USER CODE END 0 */
 
 /**
@@ -355,6 +356,12 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
+
+	PS2_CheckMessageTimeout();
+	if (PS2_MessageReady())
+	{
+		ps2_byte_message_length = PS2_GetMessage(ps2_byte_message, PS2_MESSAGE_MAX);
+	}
     if(authenticated)
     {
       HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);

@@ -24,8 +24,8 @@ Keypad:
 - PA9 INT
 
 UART:
-- PA9 UART_TX
-- PA10 UART_RX
+- PC10 UART_TX
+- PC11 UART_RX
 
 TODO: assign motor pins
 
@@ -43,8 +43,8 @@ PS/2 Magstripe Reader:
 - PC1 DATA
 
 UART:
-- PA9 UART_TX
-- PA10 UART_RX
+- PC10 UART_TX
+- PC11 UART_RX
 
 DOOR LATCHES:
 - PC2 LATCH1

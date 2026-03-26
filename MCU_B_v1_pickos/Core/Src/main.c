@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "stdio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -123,10 +124,10 @@ int main(void)
   HAL_Delay(500);
   if(HAL_OK != NFC_Init(&nfc))
   {
-    while(true)
-    {
-      HAL_Delay(1000);
-    }
+//    while(true)
+//    {
+//      HAL_Delay(1000);
+//    }
   }
 
   PS2_Init();
@@ -367,7 +368,7 @@ void StartDefaultTask(void *argument)
 
 		for (uint16_t i = 0; i < ps2_byte_message_length; ++i)
 		{
-			 uint8_t ch = PS2_ScanCodeToAscii(ps2_byte_message[i]);
+			uint8_t ch = PS2_ScanCodeToAscii(ps2_byte_message[i]);
 			if (ch != 0x00)
 			{
 				decoded_string[decoded_length] = ch;

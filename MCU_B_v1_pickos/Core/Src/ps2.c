@@ -87,19 +87,12 @@ void PS2_ClockEdgeFromIsr(void)
             break;
 
         case 1:
-        	break;
         case 2:
-        	break;
         case 3:
-        	break;
         case 4:
-        	break;
         case 5:
-        	break;
         case 6:
-        	break;
         case 7:
-        	break;
         case 8:
         	//8 bits of data, LSB first
         	ps2_current_byte |= (bit << (ps2_bit_count - 1U));

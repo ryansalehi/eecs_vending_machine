@@ -14,9 +14,22 @@ LCD:
 - PB0 RESET
 - PB1 DC
 - PA7 MOSI
-- PB6 MISO
-- PA5 SCK
+- PA6 MISO
+- PB3 SCK
 - 3.3V LED
+
+Keypad:
+- PB6 SCL
+- PC7 SDA
+- PA9 INT
+
+UART:
+- PC10 UART_TX
+- PC11 UART_RX
+
+TODO: assign motor pins
+
+////////////////////////////
 
 # MCU_B Pinout
 Token NFC:

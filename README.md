@@ -27,7 +27,13 @@ UART:
 - PC10 UART_TX
 - PC11 UART_RX
 
-TODO: assign motor pins
+Motors:
+- PC8 Step
+- PC9 Dir
+- PB4 EN1
+- PB5 EN2
+- PB13 EN3
+- PB14 EN4
 
 ////////////////////////////
 

@@ -20,7 +20,7 @@ LCD:
 
 Keypad:
 - PB6 SCL
-- PC7 SDA
+- PB9 SDA
 - PA9 INT
 
 UART:

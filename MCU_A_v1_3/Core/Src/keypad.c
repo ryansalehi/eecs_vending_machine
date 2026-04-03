@@ -4,7 +4,7 @@
 #include "stdbool.h"
 #include "cbuf.h"
 
-#define KEYPAD_ADDR (0x34)
+#define KEYPAD_ADDR (0x34 << 1)
 
 // Registers
 #define KEYPAD_CFG (0x01)
@@ -40,12 +40,12 @@ uint8_t KEYPAD_Read(uint8_t reg)
 
 void KEYPAD_Init()
 {
-	KEYPAD_Write(KEYPAD_CFG, 1);
+	
+	KEYPAD_Write(KEYPAD_CFG, 0x01);
 
-	KEYPAD_Write(0x1D, 0x0F);
-	KEYPAD_Write(0x1E, 0x0F);
+	KEYPAD_Write(0x1D, 0x0F); // rows
+	KEYPAD_Write(0x1E, 0x0F); // cols
 
-	// Enable key event interrupt
 	KEYPAD_Write(KEYPAD_INT_STAT, 0xFF);
 
 	cbuf_init(&keypad_events, events, sizeof(events)/sizeof(Event_t), sizeof(Event_t));

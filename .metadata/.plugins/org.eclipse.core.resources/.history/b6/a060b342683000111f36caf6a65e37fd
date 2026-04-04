@@ -12,6 +12,7 @@
 #define KEYPAD_EVENT_COUNT (0x03)
 #define KEYPAD_EVENT_A (0x04)
 #define KEYPAD_GPIO_DIR1  (0x23)
+#define KEYPAD_GPIO_DATA1 (0x27)
 
 volatile static bool key_press = false;
 static uint32_t num = 0;
@@ -43,7 +44,7 @@ void KEYPAD_Init()
 {
 	// Reset device
 	KEYPAD_Write(KEYPAD_CFG, 0x80);
-    osDelay(10);
+    HAL_Delay(10);
 
 	// Enable keypad / GPIO
 	// bit 0: auto increment

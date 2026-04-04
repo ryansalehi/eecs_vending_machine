@@ -104,7 +104,11 @@ void KEYPAD_ReadAnyPresses()
             new_event.pressed = (key & 0x80) >> 7; // MSB: 0 if button released, 1 if button pressed
 			KEYPAD_DecodeReading(&new_event);
 
-			cbuf_push_overwrite(&keypad_events, &new_event);
+			// only log button presses (ignore release events)
+			if(new_event.pressed == 1)
+			{
+				cbuf_push_overwrite(&keypad_events, &new_event);
+			}
 		}
 		
 		KEYPAD_Write(KEYPAD_INT_STAT, 0xFF);

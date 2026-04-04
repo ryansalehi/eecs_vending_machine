@@ -14,4 +14,4 @@
 ../Core/Src/keypad.c:67:6:KEYPAD_Init	2
 ../Core/Src/keypad.c:94:6:KEYPAD_IrqFromIsr	1
 ../Core/Src/keypad.c:99:6:KEYPAD_ReadAnyPresses	5
-../Core/Src/keypad.c:129:6:KEYPAD_ReadClassNumber	10
+../Core/Src/keypad.c:129:6:KEYPAD_PromptClassNumber	10

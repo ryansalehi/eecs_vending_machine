@@ -6,7 +6,7 @@
 ../Core/Src/main.c:417:6:HAL_GPIO_EXTI_Callback	1
 ../Core/Src/main.c:430:6:StartTask1	2
 ../Core/Src/main.c:467:6:LCDTask	1
-../Core/Src/main.c:487:6:StartTask03	1
-../Core/Src/main.c:511:6:KeypadTask	1
-../Core/Src/main.c:531:6:HAL_TIM_PeriodElapsedCallback	2
-../Core/Src/main.c:549:6:Error_Handler	1
+../Core/Src/main.c:487:6:StartTask03	2
+../Core/Src/main.c:526:6:KeypadTask	1
+../Core/Src/main.c:546:6:HAL_TIM_PeriodElapsedCallback	2
+../Core/Src/main.c:564:6:Error_Handler	1

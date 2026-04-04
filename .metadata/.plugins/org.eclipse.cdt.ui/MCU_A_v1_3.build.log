@@ -1,10 +1,11 @@
-18:51:31 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+19:35:18 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
 make -j12 all 
 arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
 In file included from ../Core/Src/keypad.c:5:
-../Core/Src/keypad.c: In function 'KEYPAD_ReadClassNumber':
-../Core/Src/keypad.c:186:62: warning: array subscript has type 'char' [-Wchar-subscripts]
-  186 |                                         if(!isdigit(class_num.decoded))
+../Core/Src/keypad.c: In function 'KEYPAD_PromptClassNumber':
+../Core/Src/keypad.c:194:62: warning: array subscript has type 'char' [-Wchar-subscripts]
+  194 |                                         if(!isdigit(class_num.decoded))
       |                                                     ~~~~~~~~~^~~~~~~~
 arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: MCU_A_v1_3.elf
@@ -12,11 +13,11 @@ Finished building target: MCU_A_v1_3.elf
 arm-none-eabi-size  MCU_A_v1_3.elf 
 arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
    text	   data	    bss	    dec	    hex	filename
- 135908	     32	  21496	 157436	  266fc	MCU_A_v1_3.elf
+ 137696	    112	  21808	 159616	  26f80	MCU_A_v1_3.elf
 Finished building: default.size.stdout
  
 Finished building: MCU_A_v1_3.list
  
 
-18:51:32 Build Finished. 0 errors, 1 warnings. (took 1s.732ms)
+19:35:20 Build Finished. 0 errors, 1 warnings. (took 1s.781ms)
 

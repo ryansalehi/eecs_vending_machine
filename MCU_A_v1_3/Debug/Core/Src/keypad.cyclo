@@ -7,4 +7,4 @@
 ../Core/Src/keypad.c:48:13:KEYPAD_DecodeReading	3
 ../Core/Src/keypad.c:62:6:KEYPAD_Init	1
 ../Core/Src/keypad.c:86:6:KEYPAD_IrqFromIsr	1
-../Core/Src/keypad.c:91:6:KEYPAD_ReadAnyPresses	3
+../Core/Src/keypad.c:91:6:KEYPAD_ReadAnyPresses	4

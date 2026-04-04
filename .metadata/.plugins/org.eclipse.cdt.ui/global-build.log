@@ -453,3 +453,17 @@ Finished building: default.size.stdout
  
 Finished building: MCU_A_v1_3.list
  
+17:56:34 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135780	     32	  21488	 157300	  26674	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 

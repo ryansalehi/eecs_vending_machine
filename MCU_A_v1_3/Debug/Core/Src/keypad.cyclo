@@ -2,8 +2,9 @@
 ../Core/Inc/cbuf.h:44:22:cbuf_full	1
 ../Core/Inc/cbuf.h:46:21:cbuf_at_	1
 ../Core/Inc/cbuf.h:65:20:cbuf_push_overwrite	4
-../Core/Src/keypad.c:31:13:KEYPAD_Write	1
-../Core/Src/keypad.c:36:16:KEYPAD_Read	1
-../Core/Src/keypad.c:43:6:KEYPAD_Init	1
-../Core/Src/keypad.c:67:6:KEYPAD_IrqFromIsr	1
-../Core/Src/keypad.c:72:6:KEYPAD_ReadAnyPresses	3
+../Core/Src/keypad.c:36:13:KEYPAD_Write	1
+../Core/Src/keypad.c:41:16:KEYPAD_Read	1
+../Core/Src/keypad.c:48:13:KEYPAD_DecodeReading	3
+../Core/Src/keypad.c:62:6:KEYPAD_Init	1
+../Core/Src/keypad.c:86:6:KEYPAD_IrqFromIsr	1
+../Core/Src/keypad.c:91:6:KEYPAD_ReadAnyPresses	3

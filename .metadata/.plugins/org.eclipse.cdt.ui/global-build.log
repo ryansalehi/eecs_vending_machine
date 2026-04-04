@@ -126,3 +126,330 @@ Finished building: default.size.stdout
  
 Finished building: MCU_A_v1_3.list
  
+17:04:42 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+../Core/Src/keypad.c: In function 'KEYPAD_ReadAnyPresses':
+../Core/Src/keypad.c:93:25: warning: implicit declaration of function 'KEYPAD_DecodeReading' [-Wimplicit-function-declaration]
+   93 |                         KEYPAD_DecodeReading(&new_event);
+      |                         ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c: At top level:
+../Core/Src/keypad.c:102:6: warning: conflicting types for 'KEYPAD_DecodeReading'; have 'void(Event_t *)'
+  102 | void KEYPAD_DecodeReading(Event_t* event)
+      |      ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c:93:25: note: previous implicit declaration of 'KEYPAD_DecodeReading' with type 'void(Event_t *)'
+   93 |                         KEYPAD_DecodeReading(&new_event);
+      |                         ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c:17:17: warning: 'num' defined but not used [-Wunused-variable]
+   17 | static uint32_t num = 0;
+      |                 ^~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135748	     32	  21488	 157268	  26654	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+17:06:09 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+In file included from ../Core/Src/keypad.c:1:
+../Core/Inc/keypad.h:13:27: error: unknown type name 'Event_t'
+   13 | void KEYPAD_DecodeReading(Event_t* event)
+      |                           ^~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:156,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h:29,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:27,
+                 from ../Core/Inc/stm32f4xx_hal_conf.h:275,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/lcd.h:4,
+                 from ../Core/Src/keypad.c:2:
+../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h:163:3: warning: data definition has no type or storage class
+  163 | } IRQn_Type;
+      |   ^~~~~~~~~
+../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h:163:3: warning: type defaults to 'int' in declaration of 'IRQn_Type' [-Wimplicit-int]
+In file included from ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h:169:
+../Drivers/CMSIS/Include/core_cm4.h:1684:39: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1684 | __STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
+      |                                       ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1703:46: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1703 | __STATIC_INLINE uint32_t __NVIC_GetEnableIRQ(IRQn_Type IRQn)
+      |                                              ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1722:40: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1722 | __STATIC_INLINE void __NVIC_DisableIRQ(IRQn_Type IRQn)
+      |                                        ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1741:47: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1741 | __STATIC_INLINE uint32_t __NVIC_GetPendingIRQ(IRQn_Type IRQn)
+      |                                               ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1760:43: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1760 | __STATIC_INLINE void __NVIC_SetPendingIRQ(IRQn_Type IRQn)
+      |                                           ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1775:45: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1775 | __STATIC_INLINE void __NVIC_ClearPendingIRQ(IRQn_Type IRQn)
+      |                                             ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1792:43: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1792 | __STATIC_INLINE uint32_t __NVIC_GetActive(IRQn_Type IRQn)
+      |                                           ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1814:41: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1814 | __STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
+      |                                         ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1836:45: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1836 | __STATIC_INLINE uint32_t __NVIC_GetPriority(IRQn_Type IRQn)
+      |                                             ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1911:39: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1911 | __STATIC_INLINE void __NVIC_SetVector(IRQn_Type IRQn, uint32_t vector)
+      |                                       ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1927:43: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1927 | __STATIC_INLINE uint32_t __NVIC_GetVector(IRQn_Type IRQn)
+      |                                           ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h: In function 'SysTick_Config':
+../Drivers/CMSIS/Include/core_cm4.h:1617:39: warning: implicit declaration of function '__NVIC_SetPriority'; did you mean 'NVIC_SetPriority'? [-Wimplicit-function-declaration]
+ 1617 |   #define NVIC_SetPriority            __NVIC_SetPriority
+      |                                       ^~~~~~~~~~~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:2030:3: note: in expansion of macro 'NVIC_SetPriority'
+ 2030 |   NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
+      |   ^~~~~~~~~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:2030:21: error: 'SysTick_IRQn' undeclared (first use in this function); did you mean 'SysTick_Type'?
+ 2030 |   NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
+      |                     ^~~~~~~~~~~~
+      |                     SysTick_Type
+../Drivers/CMSIS/Include/core_cm4.h:2030:21: note: each undeclared identifier is reported only once for each function it appears in
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:291:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h: At top level:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:261:27: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  261 | void HAL_NVIC_SetPriority(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t SubPriority);
+      |                           ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:262:25: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  262 | void HAL_NVIC_EnableIRQ(IRQn_Type IRQn);
+      |                         ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:263:26: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  263 | void HAL_NVIC_DisableIRQ(IRQn_Type IRQn);
+      |                          ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:275:27: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  275 | void HAL_NVIC_GetPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t* pPreemptPriority, uint32_t* pSubPriority);
+      |                           ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:276:33: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  276 | uint32_t HAL_NVIC_GetPendingIRQ(IRQn_Type IRQn);
+      |                                 ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:277:29: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  277 | void HAL_NVIC_SetPendingIRQ(IRQn_Type IRQn);
+      |                             ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:278:31: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  278 | void HAL_NVIC_ClearPendingIRQ(IRQn_Type IRQn);
+      |                               ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:279:29: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  279 | uint32_t HAL_NVIC_GetActive(IRQn_Type IRQn);
+      |                             ^~~~~~~~~
+In file included from ../Core/Src/main.c:26:
+../Core/Inc/keypad.h:13:27: error: unknown type name 'Event_t'
+   13 | void KEYPAD_DecodeReading(Event_t* event)
+      |                           ^~~~~~~
+../Core/Src/main.c: In function 'MX_I2C1_Init':
+../Core/Src/main.c:262:3: error: 'hi2c1' undeclared (first use in this function)
+  262 |   hi2c1.Instance = I2C1;
+      |   ^~~~~
+../Core/Src/main.c:262:3: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [Core/Src/subdir.mk:46: Core/Src/main.o] Error 1
+make: *** Waiting for unfinished jobs....
+../Core/Src/keypad.c: In function 'KEYPAD_ReadAnyPresses':
+../Core/Src/keypad.c:93:25: warning: implicit declaration of function 'KEYPAD_DecodeReading' [-Wimplicit-function-declaration]
+   93 |                         KEYPAD_DecodeReading(&new_event);
+      |                         ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c: At top level:
+../Core/Src/keypad.c:102:6: warning: conflicting types for 'KEYPAD_DecodeReading'; have 'void(Event_t *)'
+  102 | void KEYPAD_DecodeReading(Event_t* event)
+      |      ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c:93:25: note: previous implicit declaration of 'KEYPAD_DecodeReading' with type 'void(Event_t *)'
+   93 |                         KEYPAD_DecodeReading(&new_event);
+      |                         ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c:17:17: warning: 'num' defined but not used [-Wunused-variable]
+   17 | static uint32_t num = 0;
+      |                 ^~~
+make: *** [Core/Src/subdir.mk:46: Core/Src/keypad.o] Error 1
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+17:06:50 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+In file included from ../Core/Src/keypad.c:1:
+../Core/Inc/keypad.h:13:27: error: unknown type name 'Event_t'
+   13 | void KEYPAD_DecodeReading(Event_t* event)
+      |                           ^~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:156,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h:29,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:27,
+                 from ../Core/Inc/stm32f4xx_hal_conf.h:275,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/lcd.h:4,
+                 from ../Core/Src/keypad.c:2:
+../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h:163:3: warning: data definition has no type or storage class
+  163 | } IRQn_Type;
+      |   ^~~~~~~~~
+../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h:163:3: warning: type defaults to 'int' in declaration of 'IRQn_Type' [-Wimplicit-int]
+In file included from ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h:169:
+../Drivers/CMSIS/Include/core_cm4.h:1684:39: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1684 | __STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
+      |                                       ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1703:46: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1703 | __STATIC_INLINE uint32_t __NVIC_GetEnableIRQ(IRQn_Type IRQn)
+      |                                              ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1722:40: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1722 | __STATIC_INLINE void __NVIC_DisableIRQ(IRQn_Type IRQn)
+      |                                        ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1741:47: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1741 | __STATIC_INLINE uint32_t __NVIC_GetPendingIRQ(IRQn_Type IRQn)
+      |                                               ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1760:43: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1760 | __STATIC_INLINE void __NVIC_SetPendingIRQ(IRQn_Type IRQn)
+      |                                           ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1775:45: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1775 | __STATIC_INLINE void __NVIC_ClearPendingIRQ(IRQn_Type IRQn)
+      |                                             ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1792:43: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1792 | __STATIC_INLINE uint32_t __NVIC_GetActive(IRQn_Type IRQn)
+      |                                           ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1814:41: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1814 | __STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
+      |                                         ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1836:45: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1836 | __STATIC_INLINE uint32_t __NVIC_GetPriority(IRQn_Type IRQn)
+      |                                             ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1911:39: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1911 | __STATIC_INLINE void __NVIC_SetVector(IRQn_Type IRQn, uint32_t vector)
+      |                                       ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:1927:43: error: expected declaration specifiers or '...' before 'IRQn_Type'
+ 1927 | __STATIC_INLINE uint32_t __NVIC_GetVector(IRQn_Type IRQn)
+      |                                           ^~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h: In function 'SysTick_Config':
+../Drivers/CMSIS/Include/core_cm4.h:1617:39: warning: implicit declaration of function '__NVIC_SetPriority'; did you mean 'NVIC_SetPriority'? [-Wimplicit-function-declaration]
+ 1617 |   #define NVIC_SetPriority            __NVIC_SetPriority
+      |                                       ^~~~~~~~~~~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:2030:3: note: in expansion of macro 'NVIC_SetPriority'
+ 2030 |   NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
+      |   ^~~~~~~~~~~~~~~~
+../Drivers/CMSIS/Include/core_cm4.h:2030:21: error: 'SysTick_IRQn' undeclared (first use in this function); did you mean 'SysTick_Type'?
+ 2030 |   NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
+      |                     ^~~~~~~~~~~~
+      |                     SysTick_Type
+../Drivers/CMSIS/Include/core_cm4.h:2030:21: note: each undeclared identifier is reported only once for each function it appears in
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:291:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h: At top level:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:261:27: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  261 | void HAL_NVIC_SetPriority(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t SubPriority);
+      |                           ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:262:25: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  262 | void HAL_NVIC_EnableIRQ(IRQn_Type IRQn);
+      |                         ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:263:26: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  263 | void HAL_NVIC_DisableIRQ(IRQn_Type IRQn);
+      |                          ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:275:27: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  275 | void HAL_NVIC_GetPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t* pPreemptPriority, uint32_t* pSubPriority);
+      |                           ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:276:33: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  276 | uint32_t HAL_NVIC_GetPendingIRQ(IRQn_Type IRQn);
+      |                                 ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:277:29: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  277 | void HAL_NVIC_SetPendingIRQ(IRQn_Type IRQn);
+      |                             ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:278:31: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  278 | void HAL_NVIC_ClearPendingIRQ(IRQn_Type IRQn);
+      |                               ^~~~~~~~~
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:279:29: error: expected declaration specifiers or '...' before 'IRQn_Type'
+  279 | uint32_t HAL_NVIC_GetActive(IRQn_Type IRQn);
+      |                             ^~~~~~~~~
+In file included from ../Core/Src/main.c:26:
+../Core/Inc/keypad.h:13:27: error: unknown type name 'Event_t'
+   13 | void KEYPAD_DecodeReading(Event_t* event)
+      |                           ^~~~~~~
+../Core/Src/main.c: In function 'MX_I2C1_Init':
+../Core/Src/main.c:262:3: error: 'hi2c1' undeclared (first use in this function)
+  262 |   hi2c1.Instance = I2C1;
+      |   ^~~~~
+../Core/Src/main.c:262:3: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [Core/Src/subdir.mk:46: Core/Src/main.o] Error 1
+make: *** Waiting for unfinished jobs....
+../Core/Src/keypad.c: In function 'KEYPAD_ReadAnyPresses':
+../Core/Src/keypad.c:93:25: warning: implicit declaration of function 'KEYPAD_DecodeReading' [-Wimplicit-function-declaration]
+   93 |                         KEYPAD_DecodeReading(&new_event);
+      |                         ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c: At top level:
+../Core/Src/keypad.c:102:6: warning: conflicting types for 'KEYPAD_DecodeReading'; have 'void(Event_t *)'
+  102 | void KEYPAD_DecodeReading(Event_t* event)
+      |      ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c:93:25: note: previous implicit declaration of 'KEYPAD_DecodeReading' with type 'void(Event_t *)'
+   93 |                         KEYPAD_DecodeReading(&new_event);
+      |                         ^~~~~~~~~~~~~~~~~~~~
+../Core/Src/keypad.c:17:17: warning: 'num' defined but not used [-Wunused-variable]
+   17 | static uint32_t num = 0;
+      |                 ^~~
+make: *** [Core/Src/subdir.mk:46: Core/Src/keypad.o] Error 1
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+17:07:43 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/keypad.c:17:17: warning: 'num' defined but not used [-Wunused-variable]
+   17 | static uint32_t num = 0;
+      |                 ^~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135748	     32	  21488	 157268	  26654	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+17:20:11 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+../Core/Src/keypad.c:17:17: warning: 'num' defined but not used [-Wunused-variable]
+   17 | static uint32_t num = 0;
+      |                 ^~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135780	     32	  21488	 157300	  26674	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+17:45:18 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135780	     32	  21488	 157300	  26674	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+17:49:25 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135780	     32	  21488	 157300	  26674	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 

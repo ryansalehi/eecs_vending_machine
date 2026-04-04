@@ -2,6 +2,8 @@
 #include "lcd.h"
 #include "stdint.h"
 #include "stdbool.h"
+#include "ctype.h"
+#include "stdlib.h"
 #include "cbuf.h"
 
 #define KEYPAD_ADDR (0x34 << 1)
@@ -13,10 +15,13 @@
 #define KEYPAD_EVENT_A (0x04)
 #define KEYPAD_GPIO_DIR1  (0x23)
 
-volatile static bool key_press = false;
 extern I2C_HandleTypeDef hi2c1;
 
+volatile static bool key_press = false;
+static bool reading_active = false;
 static cbuf_t keypad_events;
+static osSemaphoreId_t keypadReadSemaphore; // Used for signalling between reading and processing
+static osMutexId_t keypadCbufMutex; // Prevents reading and processing at the same time
 
 typedef struct {
 	uint8_t keycode;
@@ -81,6 +86,9 @@ void KEYPAD_Init()
 	KEYPAD_Write(KEYPAD_INT_STAT, 0xFF);
 
 	cbuf_init(&keypad_events, events, sizeof(events)/sizeof(Event_t), sizeof(Event_t));
+	keypadReadSemaphore = osSemaphoreNew(1, 0, NULL);
+    configASSERT(keypadReadSemaphore != NULL);
+    keypadCbufMutex = osMutexNew(NULL);
 }
 
 void KEYPAD_IrqFromIsr()
@@ -90,8 +98,9 @@ void KEYPAD_IrqFromIsr()
 
 void KEYPAD_ReadAnyPresses()
 {
-	if(key_press)
+	if(key_press && reading_active)
 	{
+		osMutexAcquire(keypadCbufMutex, portMAX_DELAY);
 		key_press = false;
 		uint8_t count = KEYPAD_Read(KEYPAD_EVENT_COUNT) & 0x0F; // count is only the bottom 4 bits 
 
@@ -112,6 +121,91 @@ void KEYPAD_ReadAnyPresses()
 		}
 		
 		KEYPAD_Write(KEYPAD_INT_STAT, 0xFF);
+		osMutexRelease(keypadCbufMutex);
+		osSemaphoreRelease(keypadReadSemaphore);
+	}
+}
+
+bool KEYPAD_ReadClassNumber(Class_t* out)
+{
+	if(!out)
+	{
+		return false;
+	}
+	memset(out->number_string, 0, sizeof(out->number_string));
+	out->number_int = 0;
+
+	// Clear out the circular buffer
+	osMutexAcquire(keypadCbufMutex, portMAX_DELAY);
+	cbuf_clear(&keypad_events);
+	osMutexRelease(keypadCbufMutex);
+
+	while(true)
+	{
+		reading_active = true;
+		volatile osStatus_t state = osSemaphoreAcquire(keypadReadSemaphore, portMAX_DELAY);
+		if(osOK == state)
+		{
+			osMutexAcquire(keypadCbufMutex, portMAX_DELAY);
+			Event_t most_recent;
+			if(!cbuf_peek_back(&keypad_events,&most_recent))
+			{
+				// Keep reading if buffer is empty (this should never happen)
+				osMutexRelease(keypadCbufMutex);
+				continue;
+			}
+			if(most_recent.decoded == '*')
+			{
+				// * means delete
+				Event_t delete_event;
+				cbuf_pop_back(&keypad_events,&delete_event); // delete the *
+				cbuf_pop_back(&keypad_events,&delete_event); // delete the previous number
+			}
+			else if(most_recent.decoded == '#')
+			{
+				// # means "I'm done entering the number"
+				Event_t delete_event;
+				cbuf_pop_back(&keypad_events,&delete_event); // delete the #
+				if(cbuf_size(&keypad_events) != 3)
+				{
+					// Class numbers must be 3 chars
+					reading_active = false;
+					osMutexRelease(keypadCbufMutex);
+					return false;
+				}
+				for(size_t i = 0; i < 3; ++i)
+				{
+					Event_t class_num;
+					if(!cbuf_pop(&keypad_events, &class_num))
+					{
+						// failed to read class digit
+						reading_active = false;
+						osMutexRelease(keypadCbufMutex);
+						return false;
+					}
+					if(!isdigit(class_num.decoded))
+					{
+						// must be a digit
+						reading_active = false;
+						osMutexRelease(keypadCbufMutex);
+						return false;
+					}
+					out->number_string[i] = class_num.decoded;
+				}
+
+				// Reading was successful at this point
+				out->number_string[3] = '\0'; //ensure null-terminated
+				out->number_int = atoi(out->number_string);
+				reading_active = false;
+				osMutexRelease(keypadCbufMutex);
+				return true;
+			}
+			else
+			{
+				// TODO: Print new character to LCD
+			}
+			osMutexRelease(keypadCbufMutex);
+		}
 	}
 }
 

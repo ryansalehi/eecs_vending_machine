@@ -91,6 +91,22 @@ static inline bool cbuf_pop(cbuf_t *cb, void *out_elem)
     return true;
 }
 
+// Pop (back): copies most recently pushed element into out_elem. Returns false if empty.
+static inline bool cbuf_pop_back(cbuf_t *cb, void *out_elem)
+{
+    if (cbuf_empty(cb)) return false;
+
+    // Move head back to the last valid element
+    cb->head = (cb->head == 0) ? (cb->cap - 1) : (cb->head - 1);
+
+    if (out_elem) {
+        memcpy(out_elem, cbuf_at_(cb, cb->head), cb->elem_size);
+    }
+
+    cb->count--;
+    return true;
+}
+
 // Peek (front): copies oldest element into out_elem without removing. False if empty.
 static inline bool cbuf_peek(const cbuf_t *cb, void *out_elem)
 {

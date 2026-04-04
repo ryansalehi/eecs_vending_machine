@@ -545,3 +545,260 @@ Finished building: default.size.stdout
  
 Finished building: MCU_A_v1_3.list
  
+19:02:08 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc "../Core/Src/lcd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/lcd.d" -MT"Core/Src/lcd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/lcd.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+In file included from ../Core/Src/keypad.c:5:
+../Core/Src/keypad.c: In function 'KEYPAD_ReadClassNumber':
+../Core/Src/keypad.c:186:62: warning: array subscript has type 'char' [-Wchar-subscripts]
+  186 |                                         if(!isdigit(class_num.decoded))
+      |                                                     ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135908	     32	  21496	 157436	  266fc	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:02:50 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/lcd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/lcd.d" -MT"Core/Src/lcd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/lcd.o"
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135892	     32	  21496	 157420	  266ec	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:03:45 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 135892	     32	  21496	 157420	  266ec	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+19:09:46 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/lcd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/lcd.d" -MT"Core/Src/lcd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/lcd.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'StartTask03':
+../Core/Src/main.c:492:33: warning: unsigned conversion from 'int' to 'uint8_t' {aka 'unsigned char'} changes value from '288' to '32' [-Woverflow]
+  492 |   LCD_FillRect(0, 70, 480, 200, 288, 288, 288);
+      |                                 ^~~
+../Core/Src/main.c:492:38: warning: unsigned conversion from 'int' to 'uint8_t' {aka 'unsigned char'} changes value from '288' to '32' [-Woverflow]
+  492 |   LCD_FillRect(0, 70, 480, 200, 288, 288, 288);
+      |                                      ^~~
+../Core/Src/main.c:492:43: warning: unsigned conversion from 'int' to 'uint8_t' {aka 'unsigned char'} changes value from '288' to '32' [-Woverflow]
+  492 |   LCD_FillRect(0, 70, 480, 200, 288, 288, 288);
+      |                                           ^~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135940	     32	  21496	 157468	  2671c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:11:20 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135940	     32	  21496	 157468	  2671c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:11:58 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 135940	     32	  21496	 157468	  2671c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+19:12:43 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 135940	     32	  21496	 157468	  2671c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:16:33 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+C:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Core/Src/main.o: in function `StartTask03':
+C:/Users/salehir/Documents/eecs_vending_machine/MCU_A_v1_3/Debug/../Core/Src/main.c:495:(.text.StartTask03+0x38): undefined reference to `KEYPAD_PromptClassNumber'
+collect2.exe: error: ld returned 1 exit status
+make: *** [makefile:68: MCU_A_v1_3.elf] Error 1
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+19:17:01 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+In file included from ../Core/Src/keypad.c:5:
+../Core/Src/keypad.c: In function 'KEYPAD_PromptClassNumber':
+../Core/Src/keypad.c:186:62: warning: array subscript has type 'char' [-Wchar-subscripts]
+  186 |                                         if(!isdigit(class_num.decoded))
+      |                                                     ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 137436	    112	  21808	 159356	  26e7c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:17:50 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 137436	    112	  21808	 159356	  26e7c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+19:19:10 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 137436	    112	  21808	 159356	  26e7c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+19:19:49 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 137436	    112	  21808	 159356	  26e7c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+19:22:54 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 137436	    112	  21808	 159356	  26e7c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+19:24:25 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 137436	    112	  21808	 159356	  26e7c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+19:26:17 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+In file included from ../Core/Src/keypad.c:5:
+../Core/Src/keypad.c: In function 'KEYPAD_PromptClassNumber':
+../Core/Src/keypad.c:186:62: warning: array subscript has type 'char' [-Wchar-subscripts]
+  186 |                                         if(!isdigit(class_num.decoded))
+      |                                                     ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 137436	    112	  21808	 159356	  26e7c	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:30:53 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+In file included from ../Core/Src/keypad.c:5:
+../Core/Src/keypad.c: In function 'KEYPAD_PromptClassNumber':
+../Core/Src/keypad.c:189:62: warning: array subscript has type 'char' [-Wchar-subscripts]
+  189 |                                         if(!isdigit(class_num.decoded))
+      |                                                     ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 137576	    112	  21808	 159496	  26f08	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:31:24 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 137576	    112	  21808	 159496	  26f08	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:33:19 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+In file included from ../Core/Src/keypad.c:5:
+../Core/Src/keypad.c: In function 'KEYPAD_PromptClassNumber':
+../Core/Src/keypad.c:189:62: warning: array subscript has type 'char' [-Wchar-subscripts]
+  189 |                                         if(!isdigit(class_num.decoded))
+      |                                                     ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 137608	    112	  21808	 159528	  26f28	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 
+19:35:18 **** Incremental Build of configuration Debug for project MCU_A_v1_3 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/keypad.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/keypad.d" -MT"Core/Src/keypad.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/keypad.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+In file included from ../Core/Src/keypad.c:5:
+../Core/Src/keypad.c: In function 'KEYPAD_PromptClassNumber':
+../Core/Src/keypad.c:194:62: warning: array subscript has type 'char' [-Wchar-subscripts]
+  194 |                                         if(!isdigit(class_num.decoded))
+      |                                                     ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc -o "MCU_A_v1_3.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\salehir\Documents\eecs_vending_machine\MCU_A_v1_3\STM32F446ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCU_A_v1_3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MCU_A_v1_3.elf
+ 
+arm-none-eabi-size  MCU_A_v1_3.elf 
+arm-none-eabi-objdump -h -S MCU_A_v1_3.elf  > "MCU_A_v1_3.list"
+   text	   data	    bss	    dec	    hex	filename
+ 137696	    112	  21808	 159616	  26f80	MCU_A_v1_3.elf
+Finished building: default.size.stdout
+ 
+Finished building: MCU_A_v1_3.list
+ 

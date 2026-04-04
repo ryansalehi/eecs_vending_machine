@@ -487,16 +487,31 @@ void LCDTask(void *argument)
 void StartTask03(void *argument)
 {
   /* USER CODE BEGIN StartTask03 */
+  osDelay(2000); // wait 5 seconds before clearing screen
+  LCD_BeginFrame();
+  LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
+  LCD_EndFrame();
+  
   /* Infinite loop */
   for(;;)
   {
-	  LCD_BeginFrame();
-	  LCD_DrawText(60, 100, "Welcome to the EECS", 45, 3);
-    LCD_DrawText(38, 128, "sticker vending machine!", 45, 3);
-    LCD_DrawText(38, 175, "Please swipe your MCard", 45, 3);
-    LCD_DrawText(80, 203, "to get started.", 45, 3);
-	  LCD_EndFrame();
-    osDelay(1);
+	  Class_t class;
+    if(!KEYPAD_PromptClassNumber(&class))
+    {
+      LCD_BeginFrame();
+      LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
+      LCD_DrawText(15, 140, "invalid class entered!", 155, 3);
+      LCD_EndFrame();
+    }
+    else
+    {
+      LCD_BeginFrame();
+      LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
+      LCD_DrawText(15, 140, "class entered:", 155, 3);
+      LCD_DrawText(300, 140, class.number_string, 155, 3);
+      LCD_EndFrame();
+    }
+    osDelay(3000);
   }
   /* USER CODE END StartTask03 */
 }

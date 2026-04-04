@@ -117,16 +117,16 @@ void KEYPAD_ReadAnyPresses()
 			if(new_event.pressed == 1)
 			{
 				cbuf_push_overwrite(&keypad_events, &new_event);
+				osSemaphoreRelease(keypadReadSemaphore);
 			}
 		}
 		
 		KEYPAD_Write(KEYPAD_INT_STAT, 0xFF);
 		osMutexRelease(keypadCbufMutex);
-		osSemaphoreRelease(keypadReadSemaphore);
 	}
 }
 
-bool KEYPAD_ReadClassNumber(Class_t* out)
+bool KEYPAD_PromptClassNumber(Class_t* out)
 {
 	if(!out)
 	{
@@ -139,6 +139,14 @@ bool KEYPAD_ReadClassNumber(Class_t* out)
 	osMutexAcquire(keypadCbufMutex, portMAX_DELAY);
 	cbuf_clear(&keypad_events);
 	osMutexRelease(keypadCbufMutex);
+
+	LCD_BeginFrame();
+	LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
+	LCD_DrawText(15, 140, "enter your class number", 155, 3);
+	LCD_EndFrame();
+
+	char running_class_number[11] = {};
+	int running_idx = 0;
 
 	while(true)
 	{
@@ -202,7 +210,12 @@ bool KEYPAD_ReadClassNumber(Class_t* out)
 			}
 			else
 			{
-				// TODO: Print new character to LCD
+				running_class_number[running_idx++] = most_recent.decoded;
+				LCD_BeginFrame();
+				LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
+				LCD_DrawText(15, 140, "entering:", 155, 3);
+				LCD_DrawText(300, 140, running_class_number, 155, 3);
+				LCD_EndFrame();
 			}
 			osMutexRelease(keypadCbufMutex);
 		}

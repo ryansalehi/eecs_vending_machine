@@ -14,8 +14,6 @@
 #define KEYPAD_GPIO_DIR1  (0x23)
 
 volatile static bool key_press = false;
-static uint32_t num = 0;
-
 extern I2C_HandleTypeDef hi2c1;
 
 static cbuf_t keypad_events;
@@ -23,9 +21,17 @@ static cbuf_t keypad_events;
 typedef struct {
 	uint8_t keycode;
 	uint8_t pressed;
+	char decoded;
 } Event_t;
 
 Event_t events[10];
+
+char keymap[4][4] = {
+    {'1','2','3','A'},
+    {'4','5','6','B'},
+    {'7','8','9','C'},
+    {'*','0','#','D'}
+};
 
 static void KEYPAD_Write(uint8_t reg, uint8_t data)
 {
@@ -37,6 +43,20 @@ static uint8_t KEYPAD_Read(uint8_t reg)
     uint8_t data;
     HAL_I2C_Mem_Read(&hi2c1, KEYPAD_ADDR, reg, I2C_MEMADD_SIZE_8BIT, &data, 1, HAL_MAX_DELAY);
     return data;
+}
+
+static void KEYPAD_DecodeReading(Event_t* event)
+{
+	uint8_t row = event->keycode / 10;
+	uint8_t col = event->keycode % 10 - 1;
+	if(row > 3 || col > 3)
+	{
+		event->decoded = 'X'; // invalid reading
+	}
+	else
+	{
+		event->decoded = keymap[row][col];
+	}
 }
 
 void KEYPAD_Init()
@@ -82,6 +102,7 @@ void KEYPAD_ReadAnyPresses()
 			Event_t new_event;
 			new_event.keycode = key & 0x7F;
             new_event.pressed = (key & 0x80) >> 7; // MSB: 0 if button released, 1 if button pressed
+			KEYPAD_DecodeReading(&new_event);
 
 			cbuf_push_overwrite(&keypad_events, &new_event);
 		}

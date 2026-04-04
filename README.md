@@ -55,3 +55,17 @@ UART:
 DOOR LATCHES:
 - PC2 LATCH1
 - PC3 LATCH2
+
+# Keypad Pinout
+
+With pin 0 as the pin closest to the * button:
+- Pin 0: Row 1
+- Pin 1: Row 2
+- Pin 2: Col 0
+- Pin 3: Row 3
+- Pin 4: Col 1
+- Pin 5: Col 2
+- Pin 6: Col 3
+- Pin 7: Row 0
+
+When read, column value is 1-based and row value is 0-based

@@ -26,6 +26,7 @@
 #include "lcd.h"
 #include "keypad.h"
 #include "motors.h"
+#include "sender.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

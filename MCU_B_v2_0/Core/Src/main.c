@@ -131,6 +131,7 @@ int main(void)
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
+#if 0
   if(HAL_OK != NFC_Init(&nfc))
   {
     while(true)
@@ -140,7 +141,7 @@ int main(void)
   }
 
   PS2_Init();
-
+#endif
   Receiver_StartHardwareListening();
   /* USER CODE END 2 */
 
@@ -348,17 +349,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PC0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  /*Configure GPIO pin : PS_2_Clock_Pin */
+  GPIO_InitStruct.Pin = PS_2_Clock_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(PS_2_Clock_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PC1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  /*Configure GPIO pin : PS_2_Data_Pin */
+  GPIO_InitStruct.Pin = PS_2_Data_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(PS_2_Data_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PC2 PC3 */
   GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;

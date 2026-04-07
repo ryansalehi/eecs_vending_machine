@@ -57,6 +57,11 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define PS_2_Clock_Pin GPIO_PIN_0
+#define PS_2_Clock_GPIO_Port GPIOC
+#define PS_2_Clock_EXTI_IRQn EXTI0_IRQn
+#define PS_2_Data_Pin GPIO_PIN_1
+#define PS_2_Data_GPIO_Port GPIOC
 #define USART_TX_Pin GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3

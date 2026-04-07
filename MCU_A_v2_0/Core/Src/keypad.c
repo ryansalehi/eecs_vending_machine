@@ -5,6 +5,7 @@
 #include "ctype.h"
 #include "stdlib.h"
 #include "cbuf.h"
+#include "sender.h"
 
 #define KEYPAD_ADDR (0x34 << 1)
 
@@ -118,6 +119,11 @@ void KEYPAD_ReadAnyPresses()
 			{
 				cbuf_push_overwrite(&keypad_events, &new_event);
 				osSemaphoreRelease(keypadReadSemaphore);
+				if(new_event.decoded == 'A')
+				{
+					// TODO: Remove at integration
+					DoorComms_SendTestMessage();
+				}
 			}
 		}
 		

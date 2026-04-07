@@ -3,11 +3,12 @@
 #include "task.h"
 #include "cmsis_os.h"
 #include <string.h>
+#include "main.h"
 
 #define RX_BUFFER_SIZE 50
 
 extern UART_HandleTypeDef huart3;
-extern osThreadId_t receiver_taskHandle;
+extern osThreadId_t UARTTaskHandle;;
 
 // ---  Buffer Architecture ---
 static uint8_t rx_buffer[RX_BUFFER_SIZE];
@@ -67,9 +68,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 buffer_locked = 1;          // LOCK THE BUFFER so we don't overwrite it
 
                 // WAKE TASK
-                if (receiver_taskHandle != NULL)
+                if (UARTTaskHandle != NULL)
                 {
-                    vTaskNotifyGiveFromISR((TaskHandle_t)receiver_taskHandle, NULL);
+                    vTaskNotifyGiveFromISR((TaskHandle_t)UARTTaskHandle, NULL);
                 }
             }
             else

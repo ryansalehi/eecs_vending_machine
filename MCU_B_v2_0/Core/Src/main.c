@@ -131,7 +131,7 @@ int main(void)
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
-#if 0
+#if 0 // TODO: Remove at integration
   if(HAL_OK != NFC_Init(&nfc))
   {
     while(true)

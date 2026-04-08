@@ -158,7 +158,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_MUTEX */
   LCD_Init();
-  KEYPAD_Init();
+//  KEYPAD_Init();
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -358,7 +358,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 41;
+  htim3.Init.Prescaler = 44;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 9999;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -443,8 +443,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4|LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1|enable_motor3_Pin|enable_motor4_Pin
-                          |enable_motor1_Pin|enable_motor2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, enable_motor3_Pin|enable_motor4_Pin|enable_motor1_Pin|enable_motor2_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(motor_direction_GPIO_Port, motor_direction_Pin, GPIO_PIN_RESET);
@@ -640,7 +642,9 @@ void StartMOTORTask(void *argument)
 	if(needs_to_run)
 	{
 		dispense(1, &htim3);
-		needs_to_run = false;
+		dispense(2, &htim3);
+		dispense(3, &htim3);
+//		needs_to_run = false;
 	}
     osDelay(1);
   }

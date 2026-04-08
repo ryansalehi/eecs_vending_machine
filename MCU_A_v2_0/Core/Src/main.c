@@ -49,6 +49,8 @@ I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi1;
 
+TIM_HandleTypeDef htim3;
+
 UART_HandleTypeDef huart3;
 
 /* Definitions for LCDTask */
@@ -79,6 +81,13 @@ const osThreadAttr_t HEARTBEATTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for MOTORTask */
+osThreadId_t MOTORTaskHandle;
+const osThreadAttr_t MOTORTask_attributes = {
+  .name = "MOTORTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -89,10 +98,12 @@ static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_TIM3_Init(void);
 void StartLCDTask(void *argument);
 void StartKEYPADTask(void *argument);
 void StartUARTTask(void *argument);
 void StartHEARTBEATTask(void *argument);
+void StartMOTORTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -135,6 +146,7 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI1_Init();
   MX_USART3_UART_Init();
+  MX_TIM3_Init();
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
@@ -173,6 +185,9 @@ int main(void)
 
   /* creation of HEARTBEATTask */
   HEARTBEATTaskHandle = osThreadNew(StartHEARTBEATTask, NULL, &HEARTBEATTask_attributes);
+
+  /* creation of MOTORTask */
+  MOTORTaskHandle = osThreadNew(StartMOTORTask, NULL, &MOTORTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -325,6 +340,55 @@ static void MX_SPI1_Init(void)
 }
 
 /**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 41;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 9999;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 1000;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
+  HAL_TIM_MspPostInit(&htim3);
+
+}
+
+/**
   * @brief USART3 Initialization Function
   * @param None
   * @retval None
@@ -415,12 +479,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PC8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
   /*Configure GPIO pin : motor_direction_Pin */
   GPIO_InitStruct.Pin = motor_direction_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -503,6 +561,7 @@ void StartUARTTask(void *argument)
   /* USER CODE BEGIN StartUARTTask */
   
   // TODO: Using this as keypad demo rn
+  // TODO: Remove this during integration
   
   osDelay(2000); // wait 2 seconds before clearing screen
   LCD_BeginFrame();
@@ -562,6 +621,30 @@ void StartHEARTBEATTask(void *argument)
 	  osDelay(1000);                          // DO NOT use HAL_Delay() here
   }
   /* USER CODE END StartHEARTBEATTask */
+}
+
+/* USER CODE BEGIN Header_StartMOTORTask */
+/**
+* @brief Function implementing the MOTORTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartMOTORTask */
+void StartMOTORTask(void *argument)
+{
+  /* USER CODE BEGIN StartMOTORTask */
+  /* Infinite loop */
+  bool needs_to_run = true;
+  for(;;)
+  {
+	if(needs_to_run)
+	{
+		dispense(1, &htim3);
+		needs_to_run = false;
+	}
+    osDelay(1);
+  }
+  /* USER CODE END StartMOTORTask */
 }
 
 /**

@@ -94,7 +94,10 @@ void StartUARTTask(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+static uint8_t ps2_byte_message[PS2_MESSAGE_MAX];
+char decoded_string[PS2_MESSAGE_MAX];
+uint16_t decoded_length = 0;
+static uint16_t ps2_byte_message_length = 0;
 /* USER CODE END 0 */
 
 /**
@@ -454,6 +457,23 @@ void StartPS2Task(void *argument)
   /* Infinite loop */
   for(;;)
   {
+    PS2_CheckMessageTimeout();
+    if (PS2_MessageReady())
+    {
+      // function returns how many bytes were copied over
+      ps2_byte_message_length = PS2_GetMessage(ps2_byte_message, PS2_MESSAGE_MAX);
+
+      for (uint16_t i = 0; i < ps2_byte_message_length; ++i)
+      {
+        uint8_t ch = PS2_ScanCodeToAscii(ps2_byte_message[i]);
+        if (ch != 0x00)
+        {
+          decoded_string[decoded_length] = ch;
+          decoded_length++;
+        }
+      }
+      decoded_string[decoded_length] = '\0'; // null terminate
+    }
     osDelay(1);
   }
   /* USER CODE END StartPS2Task */

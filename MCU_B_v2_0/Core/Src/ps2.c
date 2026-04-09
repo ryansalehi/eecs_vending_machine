@@ -67,7 +67,7 @@ void PS2_Init(void)
 //called once per falling clock edge from the interrupt callback
 void PS2_ClockEdgeFromIsr(void)
 {
-	uint8_t bit = ps2_data_snapshot;
+    uint8_t bit = (uint8_t)HAL_GPIO_ReadPin(PS_2_Data_GPIO_Port, PS_2_Data_Pin);
 
 	switch (ps2_bit_count)
 	{

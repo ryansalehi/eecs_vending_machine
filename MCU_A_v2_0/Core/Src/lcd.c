@@ -255,14 +255,6 @@ void LCD_Init(void)
 
     LCD_BeginFrame();
     LCD_DrawImageRGB888(0, 0, 480, 70, header_480_70);
-    LCD_DrawText(60, 100, "Welcome to the EECS", 45, 3);
-    LCD_DrawText(38, 128, "sticker vending machine!", 45, 3);
-    LCD_DrawText(38, 175, "Please swipe your MCard", 45, 3);
-    LCD_DrawText(80, 203, "to get started.", 45, 3);
-    LCD_DrawText(15, 290, "user: ", 155, 2);
-    LCD_DrawText(80, 290, user, 155, 2);
-    LCD_DrawText(240, 290, "level: ", 155, 2);
-    LCD_DrawText(320, 290, level, 155, 2);
     LCD_EndFrame();
 
 }

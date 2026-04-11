@@ -4,12 +4,12 @@
 #include "cmsis_os.h"
 #include <string.h>
 #include "main.h"
-#include "sender.h"
+#include <stdint.h>
 
 #define RX_BUFFER_SIZE 50
 
 extern UART_HandleTypeDef huart3;
-extern osThreadId_t UARTTaskHandle;;
+extern osThreadId_t UARTTaskHandle;
 
 // ---  Buffer Architecture ---
 static uint8_t rx_buffer[RX_BUFFER_SIZE];
@@ -37,22 +37,17 @@ void Receiver_Process(void)
     if (notificationValue > 0)
     {
         // We own the buffer right now Process the message.
-        if (strncmp((char *)rx_buffer, "OPEN_LATCH\r", 11) == 0)
+        if (strncmp((char *)rx_buffer, "MCARD:", 6) == 0)
         {
-            // TODO: OPEN THE LATCH!
-        	// light up the LED for now as an indicator
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-			osDelay(3000);
-			// Latch Closed
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+            char*name = rx_buffer + 6;
+            SM_SetNewName(name);
         }
-        // If receives a request to wait for card swipe, enable card swipe message
-
-
-
-        // If receives a reuquest to wait for token, enable token validation message
-        // The message sent function should 
-        
+        if (strncmp((char *)rx_buffer, "LEVEL:", 6) == 0)
+        {
+            char*level = rx_buffer + 6;
+            int lev = atoi(level);
+            SM_SetLevel(lev);
+        }
 
         // Clean up and unlock
         memset(rx_buffer, 0, RX_BUFFER_SIZE); // Zero out the data

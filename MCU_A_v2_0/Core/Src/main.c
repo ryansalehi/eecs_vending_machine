@@ -27,6 +27,7 @@
 #include "keypad.h"
 #include "motors.h"
 #include "sender.h"
+#include "receiver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -151,6 +152,8 @@ int main(void)
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
 
+  Receiver_StartHardwareListening();
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -207,6 +210,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
+    // DON'T PUT STUFF HERE :)
 
     /* USER CODE BEGIN 3 */
   }
@@ -561,35 +566,9 @@ void StartKEYPADTask(void *argument)
 void StartUARTTask(void *argument)
 {
   /* USER CODE BEGIN StartUARTTask */
-  
-  // TODO: Using this as keypad demo rn
-  // TODO: Remove this during integration
-  
-  osDelay(2000); // wait 2 seconds before clearing screen
-  LCD_BeginFrame();
-  LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
-  LCD_EndFrame();
-  
-  /* Infinite loop */
   for(;;)
   {
-	  Class_t class;
-    if(!KEYPAD_PromptClassNumber(&class))
-    {
-      LCD_BeginFrame();
-      LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
-      LCD_DrawText(15, 140, "invalid class entered!", 155, 3);
-      LCD_EndFrame();
-    }
-    else
-    {
-      LCD_BeginFrame();
-      LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
-      LCD_DrawText(15, 140, "class entered:", 155, 3);
-      LCD_DrawText(300, 140, class.number_string, 155, 3);
-      LCD_EndFrame();
-    }
-    osDelay(3000);
+    Receiver_Process();
   }
   /* USER CODE END StartUARTTask */
 }
@@ -637,17 +616,17 @@ void StartMOTORTask(void *argument)
   /* USER CODE BEGIN StartMOTORTask */
   /* Infinite loop */
   osDelay(3000);
-  bool needs_to_run = true;
+  // bool needs_to_run = true;
   for(;;)
   {
-	if(needs_to_run)
-	{
-		dispense(2, &htim3);
-		dispense(1, &htim3);
-		dispense(3, &htim3);
-		dispense(4, &htim3);
-//		needs_to_run = false;
-	}
+// 	if(needs_to_run)
+// 	{
+// 		dispense(2, &htim3);
+// 		dispense(1, &htim3);
+// 		dispense(3, &htim3);
+// 		dispense(4, &htim3);
+// //		needs_to_run = false;
+// 	}
     osDelay(1);
   }
   /* USER CODE END StartMOTORTask */

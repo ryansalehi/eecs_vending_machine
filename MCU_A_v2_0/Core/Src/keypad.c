@@ -119,11 +119,6 @@ void KEYPAD_ReadAnyPresses()
 			{
 				cbuf_push_overwrite(&keypad_events, &new_event);
 				osSemaphoreRelease(keypadReadSemaphore);
-				if(new_event.decoded == 'A')
-				{
-					// TODO: Remove at integration
-					DoorComms_SendTestMessage();
-				}
 			}
 		}
 		
@@ -174,6 +169,8 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 				Event_t delete_event;
 				cbuf_pop_back(&keypad_events,&delete_event); // delete the *
 				cbuf_pop_back(&keypad_events,&delete_event); // delete the previous number
+				out->number_int = 1;
+				return true;
 			}
 			else if(most_recent.decoded == '#')
 			{

@@ -9,6 +9,7 @@
 #include "sender.h"
 #include "motors.h"
 #include "keypad.h"
+#include "questions.h"
 
 typedef struct
 {
@@ -32,6 +33,11 @@ typedef struct
      */
     int class;
     char class_string[4];
+
+    /*
+    Current question waiting for the answer
+    */
+    const Question *q;
 } State_ctx_t;
 
 typedef void (*statePtr)(State_ctx_t*);
@@ -253,11 +259,72 @@ void SM_ClassSelection(State_ctx_t* ctx)
 
 void SM_Question(State_ctx_t* ctx)
 {
-    // select a question from the question of the class indicated in the context
-    // wait for user input 
-    // if input is invalid or does not match the correct answer, go to denied state
-    // else go to dispense
+    Course course = get_course(ctx->class);
+    if (course == CINV) {
+        next_state = SM_InvalidInput;
+        return;
+    }
+
+    // Assign the address of the question to our pointer
+    ctx->q = &questions[course];
+
+   
+    LCD_BeginFrame();
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); 
+    // TODO: check if anything is out of the frame
+    int y = 100;
+    // Print Question lines
+    for (int i = 0; i < QUESTION_LINES; i++) {
+        if(ctx->q.question[i][0] != '\0') { // Only print non-empty lines
+            LCD_DrawText(38, y, ctx->q.question[i], 45, 2);
+            y += 35;
+        }
+    }
+    
+    y += 10; // Gap between Q and A
+    
+    // Print Answer choices
+    for (int i = 0; i < NUM_ANSWER; i++) {
+        LCD_DrawText(38, y, ctx->q.answers[i], 45, 2);
+        y += 35;
+    }
+    LCD_EndFrame();
+
+    
+    
+    //Next wait on this state until 1. answer is given
+    // 2. times out
+    //TODO: look at keypad function to ensure correctness
+    uint8_t user_choice;
+    uint32_t start_wait = HAL_GetTick();
+ 
+
+    while(true)
+    {
+        // 1. Check for Keypad Input (Now non-blocking)
+        if (KEYPAD_CheckForAnswer(&user_choice)) {
+            if (user_choice == ctx->q->correct_answer) {
+                next_state = SM_Dispense;
+            } else {
+                next_state = SM_Denied; //TODO: add a wrong answer state
+            }
+            return;
+        }
+
+        // 2. Check for Timeout
+        if((HAL_GetTick() - start_wait) > 10000) 
+        {
+            next_state = SM_Denied;
+            return;
+        }
+
+        // 3. Small delay to let the OS breathe
+        osDelay(10); 
+    }
+
 }
+
+
 
 void SM_InvalidInput(State_ctx_t* ctx)
 {

@@ -225,3 +225,29 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 	}
 }
 
+
+bool KEYPAD_CheckForAnswer(uint8_t *index_out) {
+	// Clear out the circular buffer
+	osMutexAcquire(keypadCbufMutex, portMAX_DELAY);
+	cbuf_clear(&keypad_events);
+	reading_active = true;
+	osMutexRelease(keypadCbufMutex);
+
+    // We only want to wait 100ms so the state machine can check for timeouts
+    if (osSemaphoreAcquire(keypadReadSemaphore, 100) == osOK) {
+        osMutexAcquire(keypadCbufMutex, portMAX_DELAY);
+        Event_t event;
+        if (cbuf_pop(&keypad_events, &event)) {
+            char choice = toupper(event.decoded);
+            if (choice >= 'A' && choice <= 'D') {
+                *index_out = choice - 'A';
+                reading_active = false;
+                osMutexRelease(keypadCbufMutex);
+                return true;
+            }
+        }
+        osMutexRelease(keypadCbufMutex);
+    }
+    return false; // No valid key pressed within 100ms
+}
+

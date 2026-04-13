@@ -20,9 +20,16 @@ void KEYPAD_IrqFromIsr();
 void KEYPAD_ReadAnyPresses();
 void KEYPAD_Init();
 
+
 /**
  * @return whether the user entered a valid class number
  */
 bool KEYPAD_PromptClassNumber(Class_t* class);
+
+/*
+* @return whether the user entered a valid answer A,B,C,D within 100ms
+*/
+
+bool KEYPAD_CheckForAnswer(uint8_t *index_out)
 
 #endif //KEYPAD_H_

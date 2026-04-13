@@ -220,12 +220,12 @@ HAL_StatusTypeDef NFC_Init(NFC_handle *h)
         sizeof(NFC_uid)
     );
 
-    if (h->rst_port) {
-        HAL_GPIO_WritePin(h->rst_port, h->rst_pin, GPIO_PIN_RESET);
-        HAL_Delay(10);
-        HAL_GPIO_WritePin(h->rst_port, h->rst_pin, GPIO_PIN_SET);
-        HAL_Delay(100);
-    }
+//    if (h->rst_port) {
+//        HAL_GPIO_WritePin(h->rst_port, h->rst_pin, GPIO_PIN_RESET);
+//        HAL_Delay(10);
+//        HAL_GPIO_WritePin(h->rst_port, h->rst_pin, GPIO_PIN_SET);
+//        HAL_Delay(100);
+//    }
 
     /* SAMConfiguration */
     uint8_t cmd[]  = { PN532_HOSTTOPN532, PN532_CMD_SAMCONFIGURATION, 0x01, 0x14, 0x01 };

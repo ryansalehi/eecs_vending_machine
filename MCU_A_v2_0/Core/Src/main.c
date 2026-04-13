@@ -158,7 +158,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_MUTEX */
   LCD_Init();
-//  KEYPAD_Init();
+  KEYPAD_Init();
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -636,14 +636,16 @@ void StartMOTORTask(void *argument)
 {
   /* USER CODE BEGIN StartMOTORTask */
   /* Infinite loop */
+  osDelay(3000);
   bool needs_to_run = true;
   for(;;)
   {
 	if(needs_to_run)
 	{
-		dispense(1, &htim3);
 		dispense(2, &htim3);
+		dispense(1, &htim3);
 		dispense(3, &htim3);
+		dispense(4, &htim3);
 //		needs_to_run = false;
 	}
     osDelay(1);

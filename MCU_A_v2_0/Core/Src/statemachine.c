@@ -12,12 +12,26 @@
 
 typedef struct
 {
-    char mcard_name[16];
+    /**
+     * MCard Reading
+     */
     volatile bool name_set;
-    int mcard_level;
+    char mcard_name[16];
+
     volatile bool level_set;
-    char class_string[4];
+    int mcard_level;
+
+    /**
+     * Token Reading
+     */
+    volatile bool token_set;
+    bool token_valid;
+
+    /**
+     * Class/keypad Reading
+     */
     int class;
+    char class_string[4];
 } State_ctx_t;
 
 typedef void (*statePtr)(State_ctx_t*);
@@ -26,6 +40,16 @@ extern TIM_HandleTypeDef htim3;
 
 static statePtr next_state;
 static State_ctx_t context;
+
+void SM_Idle(State_ctx_t* ctx);
+void SM_NFCWait(State_ctx_t* ctx);
+void SM_UnlockVault(State_ctx_t* ctx);
+void SM_Denied(State_ctx_t* ctx);
+void SM_ClassSelection(State_ctx_t* ctx);
+void SM_Question(State_ctx_t* ctx);
+void SM_InvalidInput(State_ctx_t* ctx);
+void SM_Dispense(State_ctx_t* ctx);
+void SM_OhFuck(State_ctx_t* ctx);
 
 void SM_Run()
 {
@@ -47,20 +71,21 @@ void SM_Run()
 
 void SM_SetNewName(char*name)
 {
-    context.name_set = true;
     strcpy(context.mcard_name, name);
+    context.name_set = true;
 }
 
 void SM_SetLevel(int level)
 {
-    context.level_set = true;
     context.mcard_level = level;
+    context.level_set = true;
 }
 
 void SM_Idle(State_ctx_t* ctx)
 {
     // start a new cycle 
     memset(&context, 0, sizeof(context));
+    next_state = SM_OhFuck;
 
     // print to LCD "Hello, please swipe MCard"
     LCD_BeginFrame();
@@ -76,26 +101,19 @@ void SM_Idle(State_ctx_t* ctx)
     LCD_EndFrame();
 
     // Get MCard Name
-    uint32_t start_wait = HAL_GetTick();
-    uint32_t max_wait = 5000; // 5s
     while(true)
     {
-        if((HAL_GetTick() - start_wait) > max_wait)
-        {
-            // didn't get response
-            next_state = SM_Denied;
-            return;
-        }
         if(ctx->name_set)
         {
             break;
         }
+        // else we stay idling
     }
     // Get MCard Level
-    start_wait = HAL_GetTick();
+    uint32_t start_wait = HAL_GetTick();
     while(true)
     {
-        if((HAL_GetTick() - start_wait) > max_wait)
+        if((HAL_GetTick() - start_wait) > 5000) // wait 5s max for the level to come in after the name
         {
             // didn't get response
             next_state = SM_Denied;
@@ -138,46 +156,54 @@ void SM_Idle(State_ctx_t* ctx)
 
 void SM_NFCWait(State_ctx_t* ctx)
 {
-    // print to LCD "waiting for NFC token"
-    // if token == bad || timeout == too long' set function pointer to SM_Denied
-    // if token == good set function pointer to SM_ClassSelection
-
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "Please insert your token.", 45, 3);
     LCD_DrawText(38, 175, "Machine will time out in 10 seconds.", 45, 3);
     LCD_EndFrame();
 
-    uint8_t token_reading = 0;
-    int timer = 10;
-    while(timer > 0)
+    // Get token reading
+    uint32_t start_wait = HAL_GetTick();
+    while(true)
     {
-        osDelay(1000);
-        --timer;
-        switch(token_reading)
+        if((HAL_GetTick() - start_wait) > 10000) // wait 10s max
         {
-            case 1:
-                next_state = SM_Denied;
-                break;
-            case 2:
-                next_state = SM_ClassSelection;
-                break;
-            default:
-                next_state = SM_OhFuck;
-                break;
+            // didn't get response
+            next_state = SM_Denied;
+            return;
         }
+        if(ctx->token_set)
+        {
+            break;
+        }
+        osDelay(5);
     }
-    next_state = SM_Denied;
+
+    // Check if valid NFC
+    if(!ctx->token_valid)
+    {
+        next_state = SM_Denied;
+        return;
+    }
+
+    LCD_BeginFrame();
+    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_DrawText(38, 128, "Valid token received", 45, 3);
+    LCD_EndFrame();
+    osDelay(1000);
+    next_state = SM_ClassSelection;
 }
 
 void SM_UnlockVault(State_ctx_t* ctx)
 {
+    UART_SendMessage("VAULT:OPEN");
+
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "Vault unlocked. Open quickly.", 45, 3);
     LCD_DrawText(38, 156, "Combustion Imminent.", 45, 3);
     LCD_EndFrame();
-    UART_SendMessage("VAULT:OPEN");
+
     osDelay(5000);
     next_state = SM_Idle;
 }
@@ -195,7 +221,6 @@ void SM_Denied(State_ctx_t* ctx)
 
 void SM_ClassSelection(State_ctx_t* ctx)
 {
-
     Class_t class_selection;    
     if(KEYPAD_PromptClassNumber(&class_selection)) 
     {
@@ -247,9 +272,6 @@ void SM_InvalidInput(State_ctx_t* ctx)
 
 void SM_Dispense(State_ctx_t* ctx) 
 {
-    // print to LCD "Thank you, enjoy your sticker!"
-    // turn corresponding motor and dispense sticker
-    // return to IDLE after ~10 seconds
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
     LCD_DrawText(60, 100, "Dispensing sticker...", 45, 3);
@@ -286,6 +308,6 @@ void SM_OhFuck(State_ctx_t* ctx)
     LCD_DrawText(38, 128, "You fucked up badly!", 45, 3);
     LCD_DrawText(38, 175, "Something broke, go fix", 45, 3);
     LCD_EndFrame();
-    osDelay(10000);
+    osDelay(5000);
     next_state = SM_Idle;
 }

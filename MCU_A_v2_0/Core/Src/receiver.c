@@ -5,6 +5,8 @@
 #include <string.h>
 #include "main.h"
 #include <stdint.h>
+#include "statemachine.h"
+#include <stdlib.h>
 
 #define RX_BUFFER_SIZE 50
 

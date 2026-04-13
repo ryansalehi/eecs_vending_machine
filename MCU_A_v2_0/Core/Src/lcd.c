@@ -250,13 +250,9 @@ void LCD_Init(void)
     // Start with blank screen
     LCD_FillScreen(228, 228, 228);
 
-    char user[10] = "none";
-    char level[15] = "unauthorized";
-
     LCD_BeginFrame();
     LCD_DrawImageRGB888(0, 0, 480, 70, header_480_70);
     LCD_EndFrame();
-
 }
 
 static void LCD_Render_Op(lcd_op_t*op)

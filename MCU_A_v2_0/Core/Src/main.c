@@ -28,6 +28,7 @@
 #include "motors.h"
 #include "sender.h"
 #include "receiver.h"
+#include "statemachine.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -82,11 +83,11 @@ const osThreadAttr_t HEARTBEATTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for MOTORTask */
-osThreadId_t MOTORTaskHandle;
-const osThreadAttr_t MOTORTask_attributes = {
-  .name = "MOTORTask",
-  .stack_size = 128 * 4,
+/* Definitions for SMTask */
+osThreadId_t SMTaskHandle;
+const osThreadAttr_t SMTask_attributes = {
+  .name = "SMTask",
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* USER CODE BEGIN PV */
@@ -104,7 +105,7 @@ void StartLCDTask(void *argument);
 void StartKEYPADTask(void *argument);
 void StartUARTTask(void *argument);
 void StartHEARTBEATTask(void *argument);
-void StartMOTORTask(void *argument);
+void StartSMTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -189,8 +190,8 @@ int main(void)
   /* creation of HEARTBEATTask */
   HEARTBEATTaskHandle = osThreadNew(StartHEARTBEATTask, NULL, &HEARTBEATTask_attributes);
 
-  /* creation of MOTORTask */
-  MOTORTaskHandle = osThreadNew(StartMOTORTask, NULL, &MOTORTask_attributes);
+  /* creation of SMTask */
+  SMTaskHandle = osThreadNew(StartSMTask, NULL, &SMTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -210,8 +211,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
-    // DON'T PUT STUFF HERE :)
 
     /* USER CODE BEGIN 3 */
   }
@@ -604,32 +603,22 @@ void StartHEARTBEATTask(void *argument)
   /* USER CODE END StartHEARTBEATTask */
 }
 
-/* USER CODE BEGIN Header_StartMOTORTask */
+/* USER CODE BEGIN Header_StartSMTask */
 /**
-* @brief Function implementing the MOTORTask thread.
+* @brief Function implementing the SMTask thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_StartMOTORTask */
-void StartMOTORTask(void *argument)
+/* USER CODE END Header_StartSMTask */
+void StartSMTask(void *argument)
 {
-  /* USER CODE BEGIN StartMOTORTask */
+  /* USER CODE BEGIN StartSMTask */
   /* Infinite loop */
-  osDelay(3000);
-  // bool needs_to_run = true;
   for(;;)
   {
-// 	if(needs_to_run)
-// 	{
-// 		dispense(2, &htim3);
-// 		dispense(1, &htim3);
-// 		dispense(3, &htim3);
-// 		dispense(4, &htim3);
-// //		needs_to_run = false;
-// 	}
-    osDelay(1);
+    SM_Run();
   }
-  /* USER CODE END StartMOTORTask */
+  /* USER CODE END StartSMTask */
 }
 
 /**

@@ -436,20 +436,20 @@ void StartNFCTask(void *argument)
   /* USER CODE BEGIN NFCTask */
   /* Infinite loop */
   uint8_t last_uid[10] = {0};
-    uint8_t last_len = 0;
+  uint8_t last_len = 0;
 
-    for (;;) {
-
-      if(HAL_OK == NFC_ReadPassiveTargetID(&nfc, last_uid, &last_len, 1000))
+  for (;;)
+  {
+    if(HAL_OK == NFC_ReadPassiveTargetID(&nfc, last_uid, &last_len, 1000))
+    {
+      if(last_uid[0] == 0x9a)
       {
-        if(last_uid[0] == 0x9a)
-        {
-          HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        }
-        osDelay(3000); // found a tag, wait a little bit to rescan
+        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
       }
-      osDelay(1);
+      osDelay(3000); // found a tag, wait a little bit to rescan
     }
+    osDelay(1);
+  }
   /* USER CODE END NFCTask */
   /* USER CODE END 5 */
 }

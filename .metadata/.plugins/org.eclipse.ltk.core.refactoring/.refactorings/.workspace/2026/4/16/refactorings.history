@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;MCU_A_v2_0&apos;" deleteContents="false" description="Delete resource &apos;MCU_A_v2_0&apos;" element1="/MCU_A_v2_0" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1776186175009"/>&#x0A;<refactoring comment="Delete resource &apos;MCU_B_v2_0&apos;" deleteContents="false" description="Delete resource &apos;MCU_B_v2_0&apos;" element1="/MCU_B_v2_0" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1776186178305"/>
+</session>

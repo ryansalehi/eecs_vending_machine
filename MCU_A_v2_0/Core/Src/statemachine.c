@@ -9,7 +9,7 @@
 #include "sender.h"
 #include "motors.h"
 #include "keypad.h"
-#include "questions.h"
+#include "question.h"
 
 typedef struct
 {
@@ -275,8 +275,8 @@ void SM_Question(State_ctx_t* ctx)
     int y = 100;
     // Print Question lines
     for (int i = 0; i < QUESTION_LINES; i++) {
-        if(ctx->q.question[i][0] != '\0') { // Only print non-empty lines
-            LCD_DrawText(38, y, ctx->q.question[i], 45, 2);
+        if(ctx->q->question[i][0] != '\0') { // Only print non-empty lines
+            LCD_DrawText(38, y, ctx->q->question[i], 45, 2);
             y += 35;
         }
     }
@@ -285,7 +285,7 @@ void SM_Question(State_ctx_t* ctx)
     
     // Print Answer choices
     for (int i = 0; i < NUM_ANSWER; i++) {
-        LCD_DrawText(38, y, ctx->q.answers[i], 45, 2);
+        LCD_DrawText(38, y, ctx->q->answers[i], 45, 2);
         y += 35;
     }
     LCD_EndFrame();

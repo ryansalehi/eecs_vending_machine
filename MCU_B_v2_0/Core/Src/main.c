@@ -437,9 +437,12 @@ void StartNFCTask(void *argument)
     {
       if(uid[0] == 0x9a)
       {
+    	  // accepted token, send message over UART to MCU A
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
       }
-      vTaskDelay(pdMS_TO_TICKS(200));
+      LATCH_Open(door);
+      vTaskDelay(pdMS_TO_TICKS(10000));
+      HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
     }
     else if(r == NFC_NO_CARD)
     {

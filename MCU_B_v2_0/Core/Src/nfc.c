@@ -69,7 +69,7 @@ static HAL_StatusTypeDef nfc_write_frame(NFC_handle *h, const uint8_t *data, uin
     buf[idx++] = checksum8(data, len); // data checksum
     buf[idx++] = PN532_POSTAMBLE;
 
-    return HAL_I2C_Master_Transmit(h->hi2c, h->i2c_addr, buf, idx, 100);
+    return HAL_I2C_Master_Transmit(h->hi2c, h->i2c_addr, buf, idx, 1000);
 }
 
 static HAL_StatusTypeDef nfc_read_bytes(NFC_handle *h, uint8_t *out, uint16_t n)
@@ -98,7 +98,7 @@ static HAL_StatusTypeDef nfc_wait_ready(NFC_handle *h, TickType_t timeout_ticks)
 
 static HAL_StatusTypeDef nfc_read_ack(NFC_handle *h)
 {
-    uint8_t r[7] = {0};
+    uint8_t r[10] = {0};
     HAL_StatusTypeDef st = nfc_read_bytes(h, r, sizeof(r));
     if(st != HAL_OK)
     {
@@ -231,7 +231,7 @@ HAL_StatusTypeDef NFC_Init(NFC_handle *h)
     uint8_t cmd[]  = { PN532_HOSTTOPN532, PN532_CMD_SAMCONFIGURATION, 0x01, 0x14, 0x01 };
     uint8_t resp[32]; uint8_t resp_len = 0;
 
-    HAL_StatusTypeDef st = nfc_send_cmd_wait(h, cmd, sizeof(cmd), resp, sizeof(resp), &resp_len, pdMS_TO_TICKS(800));
+    HAL_StatusTypeDef st = nfc_send_cmd_wait(h, cmd, sizeof(cmd), resp, sizeof(resp), &resp_len, pdMS_TO_TICKS(2000));
     if(st != HAL_OK)
     {
         return st;

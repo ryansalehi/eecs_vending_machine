@@ -27,6 +27,7 @@
 #include "ps2.h"
 #include "receiver.h"
 #include "latch.h"
+#include "name_roster.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -135,8 +136,6 @@ int main(void)
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
-  LATCH_Open(door);
-  HAL_Delay(1000);
   if(HAL_OK != NFC_Init(&nfc))
   {
     while(true)

@@ -77,7 +77,7 @@ NFC_handle nfc =
 		.hi2c = &hi2c1,
 		.i2c_addr = PN532_I2C_ADDR_8BIT,
     .irq_port = GPIOC, .irq_pin = GPIO_PIN_13,
-    .rst_port = GPIOA, .rst_pin = GPIO_PIN_10
+    .rst_port = GPIOA, .rst_pin = GPIO_PIN_8
 };
 /* USER CODE END PV */
 

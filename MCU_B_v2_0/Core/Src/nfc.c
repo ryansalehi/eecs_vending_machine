@@ -17,17 +17,12 @@
 /* Typical PN532 ready latency */
 #define PN532_ACK_TIMEOUT_TICKS   pdMS_TO_TICKS(200)
 #define PN532_RSP_TIMEOUT_TICKS   pdMS_TO_TICKS(500)
-
-/* Example: IRQ on PA10, RST on PA8 (change to your actual pins) */
-#define PN532_IRQ_PORT GPIOA
-#define PN532_IRQ_PIN  GPIO_PIN_10
-
-#define PN532_RST_PORT GPIOA
-#define PN532_RST_PIN  GPIO_PIN_8
+#define PN532_I2C_READY           0x01u
+#define PN532_I2C_POLL_DELAY_MS   1u
 
 NFC_uid uidsArray[10];
 cbuf_t uids;
-static bool IRQ_raised = false;
+static volatile bool IRQ_raised = false;
 
 /* Local helpers */
 static uint8_t checksum8(const uint8_t *data, uint8_t len)
@@ -40,10 +35,35 @@ static uint8_t checksum8(const uint8_t *data, uint8_t len)
     return (uint8_t)(0x100 - (sum & 0xFF));
 }
 
-inline bool uid_equal(const uint8_t *a, uint8_t alen, const uint8_t *b, uint8_t blen)
+bool NFC_uid_equal(const uint8_t *a, uint8_t alen, const uint8_t *b, uint8_t blen)
 {
     if (alen != blen) return false;
     return (memcmp(a, b, alen) == 0);
+}
+
+static TickType_t nfc_get_tick(void)
+{
+    if(xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED)
+    {
+        return pdMS_TO_TICKS(HAL_GetTick());
+    }
+
+    return xTaskGetTickCount();
+}
+
+static HAL_StatusTypeDef nfc_wait_i2c_ready(NFC_handle *h, uint32_t timeout_ms)
+{
+    uint32_t start = HAL_GetTick();
+
+    while(HAL_I2C_GetState(h->hi2c) != HAL_I2C_STATE_READY)
+    {
+        if((HAL_GetTick() - start) >= timeout_ms)
+        {
+            return HAL_BUSY;
+        }
+    }
+
+    return HAL_OK;
 }
 
 static HAL_StatusTypeDef nfc_write_frame(NFC_handle *h, const uint8_t *data, uint8_t len)
@@ -69,29 +89,74 @@ static HAL_StatusTypeDef nfc_write_frame(NFC_handle *h, const uint8_t *data, uin
     buf[idx++] = checksum8(data, len); // data checksum
     buf[idx++] = PN532_POSTAMBLE;
 
-    return HAL_I2C_Master_Transmit(h->hi2c, h->i2c_addr, buf, idx, 1000);
+    HAL_StatusTypeDef st = nfc_wait_i2c_ready(h, 10);
+    if(st != HAL_OK)
+    {
+        return st;
+    }
+
+    return HAL_I2C_Master_Transmit(h->hi2c, h->i2c_addr, buf, idx, 100);
 }
 
 static HAL_StatusTypeDef nfc_read_bytes(NFC_handle *h, uint8_t *out, uint16_t n)
 {
+    HAL_StatusTypeDef wait_st = nfc_wait_i2c_ready(h, 10);
+    if(wait_st != HAL_OK)
+    {
+        return wait_st;
+    }
+
     HAL_StatusTypeDef st = HAL_I2C_Master_Receive(h->hi2c, h->i2c_addr, out, n, 1000);
     return st;
 }
 
-/* Wait until PN532 asserts IRQ */
+static bool nfc_irq_asserted(NFC_handle *h)
+{
+    if((h->irq_port == NULL) || (h->irq_pin == 0u))
+    {
+        return false;
+    }
+
+    return HAL_GPIO_ReadPin(h->irq_port, h->irq_pin) == GPIO_PIN_RESET;
+}
+
+static bool nfc_status_ready(NFC_handle *h)
+{
+    uint8_t status = 0;
+
+    if(nfc_read_bytes(h, &status, 1) != HAL_OK)
+    {
+        return false;
+    }
+
+    return status == PN532_I2C_READY;
+}
+
 static HAL_StatusTypeDef nfc_wait_ready(NFC_handle *h, TickType_t timeout_ticks)
 {
+    uint32_t timeout_ms = (uint32_t)timeout_ticks * (uint32_t)portTICK_PERIOD_MS;
+    if((timeout_ticks > 0u) && (timeout_ms == 0u))
+    {
+        timeout_ms = 1u;
+    }
     uint32_t start = HAL_GetTick();
-    uint8_t status = 0;
 
     do
     {
-        if(IRQ_raised)
+        if(IRQ_raised || nfc_irq_asserted(h))
         {
             IRQ_raised = false;
             return HAL_OK;
         }
-    } while ((HAL_GetTick() - start) < timeout_ticks);
+
+        if(nfc_status_ready(h))
+        {
+            IRQ_raised = false;
+            return HAL_OK;
+        }
+
+        HAL_Delay(PN532_I2C_POLL_DELAY_MS);
+    } while ((HAL_GetTick() - start) < timeout_ms);
 
     return HAL_TIMEOUT;
 }
@@ -106,7 +171,7 @@ static HAL_StatusTypeDef nfc_read_ack(NFC_handle *h)
     }
 
     /* Sometimes there is a leading status byte 0x01 */
-    if(r[0] == 0x01)
+    if(r[0] == PN532_I2C_READY)
     {
         if(r[1]==0x00 && r[2]==0x00 && r[3]==0xFF && r[4]==0x00 && r[5]==0xFF && r[6]==0x00)
         {
@@ -133,7 +198,7 @@ static HAL_StatusTypeDef nfc_read_response(NFC_handle *h, uint8_t *out, uint8_t 
     }
 
     uint8_t i = 0;
-    if(r[0] == 0x01)
+    if(r[0] == PN532_I2C_READY)
     {
          /* skip status */
         i = 1;
@@ -155,6 +220,17 @@ static HAL_StatusTypeDef nfc_read_response(NFC_handle *h, uint8_t *out, uint8_t 
         return HAL_ERROR;
     }
 
+    uint8_t dcs = r[i + 5u + len];
+    uint8_t postamble = r[i + 6u + len];
+    if(dcs != checksum8(&r[i + 5], len))
+    {
+        return HAL_ERROR;
+    }
+    if(postamble != PN532_POSTAMBLE)
+    {
+        return HAL_ERROR;
+    }
+
     memcpy(out, &r[i+5], len);
     *out_len = len;
     return HAL_OK;
@@ -169,7 +245,9 @@ static HAL_StatusTypeDef nfc_send_cmd_wait(
     uint8_t *resp_len,
     TickType_t overall_timeout
 ){
-    TickType_t start = xTaskGetTickCount();
+    TickType_t start = nfc_get_tick();
+
+    IRQ_raised = false;
 
     // CMD
     HAL_StatusTypeDef st = nfc_write_frame(h, cmd, cmd_len);
@@ -191,7 +269,7 @@ static HAL_StatusTypeDef nfc_send_cmd_wait(
     }
 
     // RESPONSE
-    TickType_t now = xTaskGetTickCount();
+    TickType_t now = nfc_get_tick();
     TickType_t remaining = (now - start < overall_timeout) ? (overall_timeout - (now - start)) : 0;
     if(remaining == 0)
     {
@@ -208,6 +286,7 @@ static HAL_StatusTypeDef nfc_send_cmd_wait(
 /* Public API */
 void NFC_IrqFromIsr(NFC_handle *h)
 {
+    (void)h;
     IRQ_raised = true;
 }
 
@@ -220,12 +299,10 @@ HAL_StatusTypeDef NFC_Init(NFC_handle *h)
         sizeof(NFC_uid)
     );
 
-//    if (h->rst_port) {
-//        HAL_GPIO_WritePin(h->rst_port, h->rst_pin, GPIO_PIN_RESET);
-//        HAL_Delay(10);
-//        HAL_GPIO_WritePin(h->rst_port, h->rst_pin, GPIO_PIN_SET);
-//        HAL_Delay(100);
-//    }
+    if(h == NULL || h->hi2c == NULL)
+    {
+        return HAL_ERROR;
+    }
 
     /* SAMConfiguration */
     uint8_t cmd[]  = { PN532_HOSTTOPN532, PN532_CMD_SAMCONFIGURATION, 0x01, 0x14, 0x01 };

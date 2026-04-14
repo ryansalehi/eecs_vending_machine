@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "nfc.h"
+#include "nfc2.h"
 #include "ps2.h"
 #include "receiver.h"
 #include "latch.h"
@@ -72,13 +72,6 @@ const osThreadAttr_t UARTTask_attributes = {
   .priority = (osPriority_t) osPriorityLow,
 };
 /* USER CODE BEGIN PV */
-NFC_handle nfc =
-{
-		.hi2c = &hi2c1,
-		.i2c_addr = PN532_I2C_ADDR_8BIT,
-    .irq_port = GPIOC, .irq_pin = GPIO_PIN_13,
-    .rst_port = GPIOA, .rst_pin = GPIO_PIN_8
-};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -136,14 +129,6 @@ int main(void)
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
-  if(HAL_OK != NFC_Init(&nfc))
-  {
-    while(true)
-    {
-      HAL_Delay(1000);
-    }
-  }
-
   PS2_Init();
 
   Receiver_StartHardwareListening();
@@ -412,7 +397,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_13)
   {
-    NFC_IrqFromIsr(&nfc);
+    NFC_IrqFromISR();
   }
 
   if(GPIO_Pin == PS_2_Clock_Pin)
@@ -434,20 +419,40 @@ void StartNFCTask(void *argument)
   /* USER CODE BEGIN 5 */
   /* USER CODE BEGIN NFCTask */
   /* Infinite loop */
-  uint8_t last_uid[10] = {0};
-  uint8_t last_len = 0;
+  if(!NFC_Init())
+  {
+      for(;;)
+      {
+          vTaskDelay(pdMS_TO_TICKS(1000));
+      }
+  }
+  uint8_t uid[10];
+  uint8_t uid_len;
 
   for (;;)
   {
-    if(HAL_OK == NFC_ReadPassiveTargetID(&nfc, last_uid, &last_len, 1000))
+    NFC_Result_t r = NFC_ReadUID(uid, &uid_len, 500);
+
+    if(r == NFC_OK)
     {
-      if(last_uid[0] == 0x9a)
+      if(uid[0] == 0x9a)
       {
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
       }
-      osDelay(3000); // found a tag, wait a little bit to rescan
+      vTaskDelay(pdMS_TO_TICKS(200));
     }
-    osDelay(1);
+    else if(r == NFC_NO_CARD)
+    {
+      vTaskDelay(pdMS_TO_TICKS(20));
+    }
+    else if(r == NFC_TIMEOUT)
+    {
+      vTaskDelay(pdMS_TO_TICKS(20));
+    }
+    else
+    {
+      vTaskDelay(pdMS_TO_TICKS(50));
+    }
   }
   /* USER CODE END NFCTask */
   /* USER CODE END 5 */

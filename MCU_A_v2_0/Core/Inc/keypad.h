@@ -8,6 +8,7 @@
 #define KEYPAD_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct
 {
@@ -30,6 +31,6 @@ bool KEYPAD_PromptClassNumber(Class_t* class);
 * @return whether the user entered a valid answer A,B,C,D within 100ms
 */
 
-bool KEYPAD_CheckForAnswer(uint8_t *index_out)
+bool KEYPAD_CheckForAnswer(uint8_t *index_out);
 
 #endif //KEYPAD_H_

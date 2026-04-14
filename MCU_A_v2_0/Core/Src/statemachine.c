@@ -26,7 +26,6 @@ typedef struct
      * Token Reading
      */
     volatile bool token_set;
-    bool token_valid;
 
     /**
      * Class/keypad Reading
@@ -38,6 +37,11 @@ typedef struct
     Current question waiting for the answer
     */
     const Question *q;
+
+    /*
+    Whether MCU_B has a valid heartbeat
+     */
+    bool is_dead;
 } State_ctx_t;
 
 typedef void (*statePtr)(State_ctx_t*);
@@ -47,6 +51,7 @@ extern TIM_HandleTypeDef htim3;
 static statePtr next_state;
 static State_ctx_t context;
 
+void SM_IsDead(State_ctx_t* ctx);
 void SM_Idle(State_ctx_t* ctx);
 void SM_NFCWait(State_ctx_t* ctx);
 void SM_UnlockVault(State_ctx_t* ctx);
@@ -87,6 +92,26 @@ void SM_SetLevel(int level)
     context.level_set = true;
 }
 
+void SM_SetToken()
+{
+    context.token_set = true;
+}
+
+void SM_SetDead()
+{
+    context.is_dead = true;
+}
+
+void SM_IsDead(State_ctx_t* ctx)
+{
+    LCD_BeginFrame();
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
+    LCD_DrawText(60, 100, "Missing MCU_B", 45, 3);
+    LCD_EndFrame();
+    next_state = SM_Idle;
+    osDelay(5000);
+}
+
 void SM_Idle(State_ctx_t* ctx)
 {
     // start a new cycle 
@@ -109,6 +134,11 @@ void SM_Idle(State_ctx_t* ctx)
     // Get MCard Name
     while(true)
     {
+        if(ctx->is_dead)
+        {
+            next_state = SM_IsDead;
+            return;
+        }
         if(ctx->name_set)
         {
             break;
@@ -119,6 +149,11 @@ void SM_Idle(State_ctx_t* ctx)
     uint32_t start_wait = HAL_GetTick();
     while(true)
     {
+        if(ctx->is_dead)
+        {
+            next_state = SM_IsDead;
+            return;
+        }
         if((HAL_GetTick() - start_wait) > 5000) // wait 5s max for the level to come in after the name
         {
             // didn't get response
@@ -172,6 +207,11 @@ void SM_NFCWait(State_ctx_t* ctx)
     uint32_t start_wait = HAL_GetTick();
     while(true)
     {
+        if(ctx->is_dead)
+        {
+            next_state = SM_IsDead;
+            return;
+        }
         if((HAL_GetTick() - start_wait) > 10000) // wait 10s max
         {
             // didn't get response
@@ -185,13 +225,6 @@ void SM_NFCWait(State_ctx_t* ctx)
         osDelay(5);
     }
 
-    // Check if valid NFC
-    if(!ctx->token_valid)
-    {
-        next_state = SM_Denied;
-        return;
-    }
-
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "Valid token received", 45, 3);
@@ -202,7 +235,7 @@ void SM_NFCWait(State_ctx_t* ctx)
 
 void SM_UnlockVault(State_ctx_t* ctx)
 {
-    UART_SendMessage("VAULT:OPEN");
+
 
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
@@ -227,9 +260,19 @@ void SM_Denied(State_ctx_t* ctx)
 
 void SM_ClassSelection(State_ctx_t* ctx)
 {
+    if(ctx->is_dead)
+    {
+        next_state = SM_IsDead;
+        return;
+    }
     Class_t class_selection;    
     if(KEYPAD_PromptClassNumber(&class_selection)) 
     {
+        if(ctx->is_dead)
+        {
+            next_state = SM_IsDead;
+            return;
+        }
         switch(class_selection.number_int)
         {
             case 373: 
@@ -259,6 +302,11 @@ void SM_ClassSelection(State_ctx_t* ctx)
 
 void SM_Question(State_ctx_t* ctx)
 {
+    if(ctx->is_dead)
+    {
+        next_state = SM_IsDead;
+        return;
+    }
     Course course = get_course(ctx->class);
     if (course == CINV) {
         next_state = SM_InvalidInput;
@@ -301,6 +349,11 @@ void SM_Question(State_ctx_t* ctx)
 
     while(true)
     {
+        if(ctx->is_dead)
+        {
+            next_state = SM_IsDead;
+            return;
+        }
         // 1. Check for Keypad Input (Now non-blocking)
         if (KEYPAD_CheckForAnswer(&user_choice)) {
             if (user_choice == ctx->q->correct_answer) {
@@ -321,13 +374,15 @@ void SM_Question(State_ctx_t* ctx)
         // 3. Small delay to let the OS breathe
         osDelay(10); 
     }
-
 }
-
-
 
 void SM_InvalidInput(State_ctx_t* ctx)
 {
+    if(ctx->is_dead)
+    {
+        next_state = SM_IsDead;
+        return;
+    }
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "This is the invalid input state :)", 45, 3);

@@ -28,6 +28,7 @@
 #include "receiver.h"
 #include "latch.h"
 #include "name_roster.h"
+#include "sender.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,6 +72,13 @@ const osThreadAttr_t UARTTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for HEARTBEATTask */
+osThreadId_t HEARTBEATTaskHandle;
+const osThreadAttr_t HEARTBEATTask_attributes = {
+  .name = "HEARTBEATTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* USER CODE BEGIN PV */
 /* USER CODE END PV */
 
@@ -82,6 +90,7 @@ static void MX_USART3_UART_Init(void);
 void StartNFCTask(void *argument);
 void StartPS2Task(void *argument);
 void StartUARTTask(void *argument);
+void StartHeartbeatTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -163,6 +172,9 @@ int main(void)
 
   /* creation of UARTTask */
   UARTTaskHandle = osThreadNew(StartUARTTask, NULL, &UARTTask_attributes);
+
+  /* creation of HEARTBEATTask */
+  HEARTBEATTaskHandle = osThreadNew(StartHeartbeatTask, NULL, &HEARTBEATTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -435,14 +447,14 @@ void StartNFCTask(void *argument)
 
     if(r == NFC_OK)
     {
-      if(uid[0] == 0x9a)
+      if(uid[0] == 0x9a) // TODO: replace this with a universal token validation func, or we can given all tokens the same id
       {
     	  // accepted token, send message over UART to MCU A
+        UART_SendMessage("TOKEN_VALID");
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
       }
       LATCH_Open(door);
       vTaskDelay(pdMS_TO_TICKS(10000));
-      HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
     }
     else if(r == NFC_NO_CARD)
     {
@@ -496,7 +508,20 @@ void StartPS2Task(void *argument)
       decoded_string[decoded_length] = '\0'; // null terminate
       char message_for_LCD[16];
       int auth_number = auth(decoded_string, message_for_LCD);
-      int y = 1;
+
+      char name_message[22] = "MCARD:";
+      strcat(name_message, message_for_LCD);
+      UART_SendMessage(name_message);
+
+      if (auth_number == 2){
+        LATCH_Open(door);
+      }
+      osDelay(1000);
+      char level_message[22] = "LEVEL:";
+      char level_number[2] = "0";
+      level_number[0] += auth_number;
+      strcat(level_message, level_number);
+      osDelay(1000);
     }
     osDelay(1);
   }
@@ -520,6 +545,25 @@ void StartUARTTask(void *argument)
     osDelay(1);
   }
   /* USER CODE END StartUARTTask */
+}
+
+/* USER CODE BEGIN Header_StartHeartbeatTask */
+/**
+* @brief Function implementing the HEARTBEATTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartHeartbeatTask */
+void StartHeartbeatTask(void *argument)
+{
+  /* USER CODE BEGIN StartHeartbeatTask */
+  /* Infinite loop */
+  for(;;)
+  {
+	UART_SendMessage("HEART_BEAT");
+    osDelay(1000);
+  }
+  /* USER CODE END StartHeartbeatTask */
 }
 
 /**

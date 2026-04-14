@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include "statemachine.h"
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define RX_BUFFER_SIZE 50
 
@@ -21,6 +22,17 @@ static uint16_t rx_index = 0;
 // LOCK: 0 = Free for ISR to write, 1 = Task is busy processing
 static volatile uint8_t buffer_locked = 0;
 
+static uint32_t last_heart_beat = 0;
+
+void UART_Init()
+{
+	last_heart_beat = HAL_GetTick();
+}
+
+uint32_t UART_GetLastHeartbeat()
+{
+    return last_heart_beat;
+}
 
 // 1. Hardware Primer
 void Receiver_StartHardwareListening(void)
@@ -49,6 +61,12 @@ void Receiver_Process(void)
             char*level = rx_buffer + 6;
             int lev = atoi(level);
             SM_SetLevel(lev);
+        }
+        if (strncmp((char*)rx_buffer, "TOKEN_VALID", 11) == 0){
+            SM_SetToken();
+        }
+        if (strncmp((char*)rx_buffer, "HEART_BEAT", 10) == 0){
+            last_heart_beat = HAL_GetTick();
         }
 
         // Clean up and unlock

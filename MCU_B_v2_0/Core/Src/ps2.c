@@ -8,6 +8,7 @@ static volatile uint8_t ps2_current_byte = 0;
 static volatile uint8_t ps2_parity_bit = 0;
 static volatile uint8_t ps2_last_byte = 0;
 volatile uint8_t ps2_data_snapshot = 0;
+static bool ps2_inited = false;
 
 /* timeout value for end-of-message detection */
 # define PS2_MESSAGE_TIMEOUT_MS 25
@@ -62,6 +63,12 @@ void PS2_Init(void)
     ps2_message_length = 0;
     ps2_message_ready = false;
     ps2_last_byte_tick = 0;
+    ps2_inited = true;
+}
+
+bool PS2_Inited()
+{
+    return ps2_inited;
 }
 
 //called once per falling clock edge from the interrupt callback

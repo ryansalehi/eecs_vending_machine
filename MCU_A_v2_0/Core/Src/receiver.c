@@ -84,7 +84,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         // Only accept data if the Task has unlocked the buffer!
         if (buffer_locked == 0)
         {
-            if (rx_byte == '\n')
+            if (rx_byte == 0)
             {
                 rx_buffer[rx_index] = '\0'; // Null-terminate
 

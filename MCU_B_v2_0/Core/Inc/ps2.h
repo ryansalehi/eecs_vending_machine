@@ -6,6 +6,7 @@
 
 //resets the receiver state
 void PS2_Init(void);
+bool PS2_Inited();
 
 # define PS2_MESSAGE_MAX 500
 

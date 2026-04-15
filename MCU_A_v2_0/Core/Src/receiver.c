@@ -68,12 +68,11 @@ void Receiver_Process(void)
         if (strncmp((char*)rx_buffer, "HEART_BEAT", 10) == 0){
             last_heart_beat = HAL_GetTick();
         }
-
-        // Clean up and unlock
-        memset(rx_buffer, 0, RX_BUFFER_SIZE); // Zero out the data
-        rx_index = 0;                         // Reset the typewriter carriage
-        buffer_locked = 0;                    // UNLOCK: ISR is allowed to write again
     }
+    // Clean up and unlock
+	memset(rx_buffer, 0, RX_BUFFER_SIZE); // Zero out the data
+	rx_index = 0;                         // Reset the typewriter carriage
+	buffer_locked = 0;                    // UNLOCK: ISR is allowed to write again
 }
 
 // 3. The Producer ISR

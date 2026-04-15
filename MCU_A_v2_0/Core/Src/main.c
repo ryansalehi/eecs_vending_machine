@@ -588,7 +588,7 @@ void StartHEARTBEATTask(void *argument)
   for(;;)
   {
     val++;
-    if(HAL_GetTick() - UART_GetLastHeartbeat() > 10000)
+    if(HAL_GetTick() - UART_GetLastHeartbeat() > 3000)
     {
         SM_SetDead();
         UART_Init();

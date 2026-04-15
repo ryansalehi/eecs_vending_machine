@@ -563,6 +563,7 @@ void StartHeartbeatTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 	UART_SendMessage("HEART_BEAT");
     osDelay(1000);
   }

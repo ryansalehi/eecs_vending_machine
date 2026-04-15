@@ -167,7 +167,7 @@ void SM_Idle(State_ctx_t* ctx)
     }
 
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
     LCD_DrawText(15, 290, "user: ", 155, 2);
     LCD_DrawText(80, 290, ctx->mcard_name, 155, 2);
     LCD_DrawText(240, 290, "level: ", 155, 2);
@@ -198,7 +198,7 @@ void SM_Idle(State_ctx_t* ctx)
 void SM_NFCWait(State_ctx_t* ctx)
 {
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "Please insert your token.", 45, 3);
     LCD_DrawText(38, 175, "Machine will time out in 10 seconds.", 45, 3);
     LCD_EndFrame();
@@ -226,7 +226,7 @@ void SM_NFCWait(State_ctx_t* ctx)
     }
 
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "Valid token received", 45, 3);
     LCD_EndFrame();
     osDelay(1000);
@@ -238,7 +238,7 @@ void SM_UnlockVault(State_ctx_t* ctx)
 
 
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "Vault unlocked. Open quickly.", 45, 3);
     LCD_DrawText(38, 156, "Combustion Imminent.", 45, 3);
     LCD_EndFrame();
@@ -250,7 +250,7 @@ void SM_UnlockVault(State_ctx_t* ctx)
 void SM_Denied(State_ctx_t* ctx)
 {
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "Access Denied.", 45, 3);
     LCD_EndFrame();
     osDelay(3000);
@@ -318,7 +318,7 @@ void SM_Question(State_ctx_t* ctx)
 
    
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); 
+    LCD_FillRect(0, 71, 480, 219, 228, 228, 228);
     // TODO: check if anything is out of the frame
     int y = 100;
     // Print Question lines
@@ -384,7 +384,7 @@ void SM_InvalidInput(State_ctx_t* ctx)
         return;
     }
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "This is the invalid input state :)", 45, 3);
     LCD_DrawText(38, 175, "Don't feel bad. You are cool.", 45, 3);
     LCD_EndFrame();
@@ -395,7 +395,7 @@ void SM_InvalidInput(State_ctx_t* ctx)
 void SM_Dispense(State_ctx_t* ctx) 
 {
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
     LCD_DrawText(60, 100, "Dispensing sticker...", 45, 3);
     LCD_EndFrame();
     osDelay(500);
@@ -426,7 +426,7 @@ void SM_Dispense(State_ctx_t* ctx)
 void SM_OhFuck(State_ctx_t* ctx)
 {
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 25, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "You fucked up badly!", 45, 3);
     LCD_DrawText(38, 175, "Something broke, go fix", 45, 3);
     LCD_EndFrame();

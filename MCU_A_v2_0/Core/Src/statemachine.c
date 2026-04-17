@@ -26,6 +26,7 @@ typedef struct
      * Token Reading
      */
     volatile bool token_set;
+    volatile bool invalid_token;
 
     /**
      * Class/keypad Reading
@@ -48,6 +49,7 @@ static State_ctx_t context;
 
 void SM_Idle(State_ctx_t* ctx);
 void SM_NFCWait(State_ctx_t* ctx);
+void SM_InvalidToken(State_ctx_t* ctx);
 void SM_UnlockVault(State_ctx_t* ctx);
 void SM_Denied(State_ctx_t* ctx);
 void SM_ClassSelection(State_ctx_t* ctx);
@@ -89,6 +91,11 @@ void SM_SetLevel(int level)
 void SM_SetToken()
 {
     context.token_set = true;
+}
+
+void SM_SetInvalidToken()
+{
+    context.invalid_token = true;
 }
 
 void SM_Idle(State_ctx_t* ctx)
@@ -153,7 +160,7 @@ void SM_Idle(State_ctx_t* ctx)
             next_state = SM_UnlockVault;
             break;
         case 3:
-            // unathorized / denied
+            // unauthorized / denied
             LCD_DrawText(320, 290, "unrecognized", 155, 2);
             next_state = SM_Denied;
             break;
@@ -168,15 +175,15 @@ void SM_NFCWait(State_ctx_t* ctx)
 {
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
-    LCD_DrawText(38, 128, "Please insert your token.", 45, 3);
-    LCD_DrawText(38, 175, "Machine will time out in 10 seconds.", 45, 3);
+    LCD_DrawText(38, 128, "Please insert a token.", 45, 3);
+    LCD_DrawText(38, 175, "Machine will time out in 20 seconds.", 45, 2);
     LCD_EndFrame();
 
     // Get token reading
     uint32_t start_wait = HAL_GetTick();
     while(true)
     {
-        if((HAL_GetTick() - start_wait) > 10000) // wait 10s max
+        if((HAL_GetTick() - start_wait) > 20000) // wait 20s max
         {
             // didn't get response
             next_state = SM_Denied;
@@ -186,15 +193,30 @@ void SM_NFCWait(State_ctx_t* ctx)
         {
             break;
         }
+        if(ctx->invalid_token)
+        {
+            next_state = SM_InvalidToken;
+            return;
+        }
         osDelay(5);
     }
 
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
-    LCD_DrawText(38, 128, "Valid token received", 45, 3);
+    LCD_DrawText(38, 128, "Valid token received!", 45, 3);
     LCD_EndFrame();
     osDelay(1000);
     next_state = SM_ClassSelection;
+}
+
+void SM_InvalidToken(State_ctx_t* ctx)
+{
+    LCD_BeginFrame();
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
+    LCD_DrawText(38, 128, "Invalid token :(", 45, 3);
+    LCD_EndFrame();
+    osDelay(2000);
+    next_state = SM_Idle;
 }
 
 void SM_UnlockVault(State_ctx_t* ctx)

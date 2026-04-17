@@ -53,6 +53,9 @@ void Receiver_Process(void)
         if (strncmp((char*)rx_buffer, "TOKEN_VALID", 11) == 0){
             SM_SetToken();
         }
+        if (strncmp((char*)rx_buffer, "TOKEN_INVLD", 11) == 0){
+            SM_SetInvalidToken();
+        }
     }
     // Clean up and unlock
 	memset(rx_buffer, 0, RX_BUFFER_SIZE); // Zero out the data

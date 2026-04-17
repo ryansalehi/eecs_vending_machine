@@ -170,6 +170,8 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 				cbuf_pop_back(&keypad_events,&delete_event); // delete the *
 				cbuf_pop_back(&keypad_events,&delete_event); // delete the previous number
 				out->number_int = 1;
+				reading_active = false;
+				osMutexRelease(keypadCbufMutex);
 				return true;
 			}
 			else if(most_recent.decoded == '#')

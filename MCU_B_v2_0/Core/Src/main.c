@@ -457,7 +457,7 @@ void StartNFCTask(void *argument)
       {
         UART_SendMessage("TOKEN_INVLD");
       }
-      LATCH_Open(door); // let the token pass regardless of validity
+      LATCH_Open(tokendrop); // let the token pass regardless of validity
     }
     else if(r == NFC_NO_CARD)
     {

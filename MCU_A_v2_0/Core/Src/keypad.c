@@ -166,7 +166,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 			}
 			if(most_recent.decoded == '*')
 			{
-				// * means delete
+				// * means exit
 				Event_t delete_event;
 				cbuf_pop_back(&keypad_events,&delete_event); // delete the *
 				cbuf_pop_back(&keypad_events,&delete_event); // delete the previous number
@@ -180,7 +180,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 				// # means "I'm done entering the number"
 				Event_t delete_event;
 				cbuf_pop_back(&keypad_events,&delete_event); // delete the #
-				if(cbuf_size(&keypad_events) != 3)
+				if(cbuf_size(&keypad_events) < 3)
 				{
 					// Class numbers must be 3 chars
 					reading_active = false;
@@ -216,6 +216,16 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 			}
 			else
 			{
+				if(running_idx > 2)
+				{
+					// clear, but keep the most recent
+					Event_t recent;
+					cbuf_pop_back(&keypad_events, &recent);
+					running_idx = 0;
+					cbuf_clear(&keypad_events);
+					memset(running_class_number, 0, sizeof(running_class_number));
+					cbuf_push_overwrite(&keypad_events, &recent);
+				}
 				running_class_number[running_idx++] = most_recent.decoded;
 				LCD_BeginFrame();
 				LCD_FillRect(15, 70, 465, 100, 228, 228, 228);

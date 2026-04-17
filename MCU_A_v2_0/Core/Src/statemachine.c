@@ -57,7 +57,6 @@ void SM_Question(State_ctx_t* ctx);
 void SM_WrongAnswer(State_ctx_t* ctx);
 void SM_InvalidInput(State_ctx_t* ctx);
 void SM_Dispense(State_ctx_t* ctx);
-void SM_OhFuck(State_ctx_t* ctx);
 
 void SM_Run()
 {
@@ -72,7 +71,7 @@ void SM_Run()
         else
         {
             // we're cooked, shouldn't get here
-            next_state = SM_OhFuck;
+            next_state = SM_Idle;
         }
     }
 }
@@ -103,7 +102,7 @@ void SM_Idle(State_ctx_t* ctx)
 {
     // start a new cycle 
     memset(&context, 0, sizeof(context));
-    next_state = SM_OhFuck;
+    next_state = SM_Idle;
 
     // print to LCD "Hello, please swipe MCard"
     LCD_BeginFrame();
@@ -161,12 +160,11 @@ void SM_Idle(State_ctx_t* ctx)
             next_state = SM_UnlockVault;
             break;
         case 3:
+            // fall through intentional
+        default:
             // unauthorized / denied
             LCD_DrawText(320, 290, "unrecognized", 155, 2);
             next_state = SM_Denied;
-            break;
-        default:
-            next_state = SM_OhFuck;
             break;
     }
     LCD_EndFrame();
@@ -392,14 +390,3 @@ void SM_Dispense(State_ctx_t* ctx)
     osDelay(3000);
     next_state = SM_Idle;
 } 
-
-void SM_OhFuck(State_ctx_t* ctx)
-{
-    LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
-    LCD_DrawText(38, 128, "You fucked up badly!", 45, 3);
-    LCD_DrawText(38, 175, "Something broke, go fix", 45, 3);
-    LCD_EndFrame();
-    osDelay(5000);
-    next_state = SM_Idle;
-}

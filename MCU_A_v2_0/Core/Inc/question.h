@@ -38,20 +38,56 @@ typedef struct {
 static const Question questions[NUM_COURSES] = {
     [C373] = {
         .question = {
-            "What ...?",
-            "2nd line..."
+            "Which communication protocol",
+            "uses a chip select wire?"
         },
         .answers = {
-            "A: ",
-            "B: ",
-            "C: ",
-            "D: "
+            "A: SPI",
+            "B: I2C",
+            "C: CAN",
+            "D: UART"
+        },
+        .correct_answer = 0 // index or letter is fine
+    },
+    [C270] = {
+        .question = {
+            "Which gate outputs 1 if",
+            "at least one input is 1?"
+        },
+        .answers = {
+            "A: AND",
+            "B: OR",
+            "C: NOT",
+            "D: XOR"
         },
         .correct_answer = 1 // index or letter is fine
     },
-    { .question = {{0}}, .answers = {{0}}, .correct_answer = 0 },
-    { .question = {{0}}, .answers = {{0}}, .correct_answer = 0 },
-    { .question = {{0}}, .answers = {{0}}, .correct_answer = 0 }
+    [C281] = {
+        .question = {
+            "Which data structure uses",
+            "FIFO (First In, First Out)?"
+        },
+        .answers = {
+            "A: Tree",
+            "B: Stack",
+            "C: Queue",
+            "D: Hash Map"
+        },
+        .correct_answer = 2 // index or letter is fine
+    },
+    [C489] = {
+        .question = {
+            "Which protocol is used to reliably",
+            "send data on the internet?"
+        },
+        .answers = {
+            "A: UDP",
+            "B: HTTP",
+            "C: IP",
+            "D: TCP"
+        },
+        .correct_answer = 3 // index or letter is fine
+    }
 };
 
 #endif /* QUESTION_H */

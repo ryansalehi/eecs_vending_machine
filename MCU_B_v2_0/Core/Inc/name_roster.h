@@ -4,6 +4,7 @@
 #include "ctype.h"
 #include "string.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 //pass in the string from the magstripe
 //returns 1 if admin
@@ -14,5 +15,7 @@ int auth(char * message_from_mag, char * name_for_LCD);
 // helper function used by auth() to
 // check the authentication level of the user
 uint8_t which_user(char * message_for_LCD);
+
+bool is_valid_token(uint8_t* uid, uint8_t uid_len);
 
 #endif

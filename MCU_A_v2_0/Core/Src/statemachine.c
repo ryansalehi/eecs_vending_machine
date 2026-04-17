@@ -235,7 +235,7 @@ void SM_UnlockVault(State_ctx_t* ctx)
 void SM_Denied(State_ctx_t* ctx)
 {
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
     LCD_DrawText(38, 128, "Access Denied.", 45, 3);
     LCD_EndFrame();
     osDelay(3000);
@@ -286,7 +286,6 @@ void SM_Question(State_ctx_t* ctx)
     // Assign the address of the question to our pointer
     ctx->q = &questions[course];
 
-   
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 219, 228, 228, 228);
     // TODO: check if anything is out of the frame
@@ -330,7 +329,7 @@ void SM_Question(State_ctx_t* ctx)
         }
 
         // 2. Check for Timeout
-        if((HAL_GetTick() - start_wait) > 10000) 
+        if((HAL_GetTick() - start_wait) > 30000) 
         {
             next_state = SM_Denied;
             return;
@@ -355,18 +354,18 @@ void SM_WrongAnswer(State_ctx_t* ctx)
 void SM_InvalidInput(State_ctx_t* ctx)
 {
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
-    LCD_DrawText(38, 128, "This is the invalid input state :)", 45, 3);
-    LCD_DrawText(38, 175, "Don't feel bad. You are cool.", 45, 3);
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
+    LCD_DrawText(38, 128, "This is the invalid input state.", 45, 2);
+    LCD_DrawText(38, 175, "Don't feel bad. You are cool.", 45, 2);
     LCD_EndFrame();
-    osDelay(3000);
+    osDelay(5000);
     next_state = SM_ClassSelection;
 }
 
 void SM_Dispense(State_ctx_t* ctx) 
 {
     LCD_BeginFrame();
-    LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
     LCD_DrawText(60, 100, "Dispensing sticker...", 45, 3);
     LCD_EndFrame();
     osDelay(500);
@@ -388,7 +387,7 @@ void SM_Dispense(State_ctx_t* ctx)
     }
     LCD_BeginFrame();
     LCD_FillRect(60, 100, 420, 195, 228, 228, 228);
-    LCD_DrawText(60, 100, "Thank you, enjoy your sticker!", 45, 3);
+    LCD_DrawText(60, 100, "Thank you, enjoy!", 45, 3);
     LCD_EndFrame();
     osDelay(3000);
     next_state = SM_Idle;

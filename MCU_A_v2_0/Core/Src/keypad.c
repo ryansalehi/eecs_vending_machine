@@ -144,6 +144,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 	LCD_BeginFrame();
 	LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
 	LCD_DrawText(15, 140, "enter your class number", 155, 3);
+	LCD_DrawText(15, 175, "available: 373, 270, 281, 489", 155, 2);
 	LCD_EndFrame();
 
 	char running_class_number[11] = {};
@@ -217,8 +218,8 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 			{
 				running_class_number[running_idx++] = most_recent.decoded;
 				LCD_BeginFrame();
-				LCD_FillRect(0, 70, 480, 200, 228, 228, 228);
-				LCD_DrawText(15, 140, "entering:", 155, 3);
+				LCD_FillRect(15, 70, 465, 100, 228, 228, 228);
+				LCD_DrawText(15, 140, "entered:", 155, 3);
 				LCD_DrawText(300, 140, running_class_number, 155, 3);
 				LCD_EndFrame();
 			}

@@ -1,6 +1,7 @@
 #include "sender.h"
 #include "main.h"
 #include <stdint.h>
+#include <string.h>
 
 // Tell this file that huart3 exists somewhere else (in main.c)
 extern UART_HandleTypeDef huart3;

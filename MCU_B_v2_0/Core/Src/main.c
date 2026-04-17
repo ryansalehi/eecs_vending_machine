@@ -25,7 +25,6 @@
 /* USER CODE BEGIN Includes */
 #include "nfc2.h"
 #include "ps2.h"
-#include "receiver.h"
 #include "latch.h"
 #include "name_roster.h"
 #include "sender.h"
@@ -139,8 +138,6 @@ int main(void)
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
   PS2_Init();
-
-  Receiver_StartHardwareListening();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -511,14 +508,12 @@ void StartPS2Task(void *argument)
       decoded_string[decoded_length] = '\0'; // null terminate
       char message_for_LCD[16];
       int auth_number = auth(decoded_string, message_for_LCD);
-
-      char name_message[22] = "MCARD:";
-      strcat(name_message, message_for_LCD);
-      UART_SendMessage(name_message);
-
       if (auth_number == 2){
         LATCH_Open(door);
       }
+      char name_message[22] = "MCARD:";
+      strcat(name_message, message_for_LCD);
+      UART_SendMessage(name_message);
       osDelay(1000);
       char level_message[22] = "LEVEL:";
       char level_number[2] = "0";
@@ -544,8 +539,7 @@ void StartUARTTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    Receiver_Process();
-    osDelay(1);
+    osDelay(10000);
   }
   /* USER CODE END StartUARTTask */
 }
@@ -564,7 +558,6 @@ void StartHeartbeatTask(void *argument)
   for(;;)
   {
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	UART_SendMessage("HEART_BEAT");
     osDelay(1000);
   }
   /* USER CODE END StartHeartbeatTask */

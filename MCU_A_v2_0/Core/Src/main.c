@@ -153,7 +153,6 @@ int main(void)
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
-  UART_Init();
   Receiver_StartHardwareListening();
 
   /* USER CODE END 2 */
@@ -588,11 +587,6 @@ void StartHEARTBEATTask(void *argument)
   for(;;)
   {
     val++;
-    if(HAL_GetTick() - UART_GetLastHeartbeat() > 3000)
-    {
-        SM_SetDead();
-        UART_Init();
-    }
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle Blue LED
     LCD_BeginFrame();
     if(val % 2 == 0)

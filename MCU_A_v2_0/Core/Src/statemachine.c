@@ -54,6 +54,7 @@ void SM_UnlockVault(State_ctx_t* ctx);
 void SM_Denied(State_ctx_t* ctx);
 void SM_ClassSelection(State_ctx_t* ctx);
 void SM_Question(State_ctx_t* ctx);
+void SM_WrongAnswer(State_ctx_t* ctx);
 void SM_InvalidInput(State_ctx_t* ctx);
 void SM_Dispense(State_ctx_t* ctx);
 void SM_OhFuck(State_ctx_t* ctx);
@@ -323,7 +324,7 @@ void SM_Question(State_ctx_t* ctx)
             if (user_choice == ctx->q->correct_answer) {
                 next_state = SM_Dispense;
             } else {
-                next_state = SM_Denied; //TODO: add a wrong answer state
+                next_state = SM_WrongAnswer;
             }
             return;
         }
@@ -338,6 +339,17 @@ void SM_Question(State_ctx_t* ctx)
         // 3. Small delay to let the OS breathe
         osDelay(10); 
     }
+}
+
+void SM_WrongAnswer(State_ctx_t* ctx)
+{
+    LCD_BeginFrame();
+    LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white
+    LCD_DrawText(38, 128, "Sorry, wrong answer :(", 45, 3);
+    LCD_DrawText(38, 175, "See you again next year.", 45, 3);
+    LCD_EndFrame();
+    osDelay(5000);
+    next_state = SM_Idle;
 }
 
 void SM_InvalidInput(State_ctx_t* ctx)

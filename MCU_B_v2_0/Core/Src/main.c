@@ -453,7 +453,11 @@ void StartNFCTask(void *argument)
         UART_SendMessage("TOKEN_VALID");
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
       }
-      LATCH_Open(door);
+      else
+      {
+        UART_SendMessage("TOKEN_INVLD");
+      }
+      LATCH_Open(door); // let the token pass regardless of validity
     }
     else if(r == NFC_NO_CARD)
     {

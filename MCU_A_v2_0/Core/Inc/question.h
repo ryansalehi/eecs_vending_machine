@@ -77,8 +77,8 @@ static const Question questions[NUM_COURSES] = {
     },
     [C489] = {
         .question = {
-            "Which protocol is used to reliably",
-            "send data on the internet?"
+            "Which protocol checks for",
+            "ACK when sending data?"
         },
         .answers = {
             "A: UDP",

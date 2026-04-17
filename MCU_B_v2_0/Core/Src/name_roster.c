@@ -24,6 +24,15 @@ static const char *admin_roster[] = {
     "carl", "mccloskey", "akhmatdinov", "desai", "koduru", "lee",
 };
 
+static const uint8_t tokens[5][4] =
+{
+	{0x04,0x54,0xA8,0x9F},
+	{0x04,0x88,0x9E,0x9F},
+	{0x04,0x87,0x6B,0x9F},
+	{0x04,0xA6,0x89,0x9F},
+	{0x04,0x96,0x72,0x9F}
+};
+
 #define STUDENT_COUNT (sizeof(student_roster) / sizeof(student_roster[0]))
 #define ADMIN_COUNT   (sizeof(admin_roster)   / sizeof(admin_roster[0]))
 
@@ -104,7 +113,21 @@ uint8_t which_user(char * message_for_LCD)
 	return 3;
 }
 
-
+bool is_valid_token(uint8_t* uid, uint8_t uid_len)
+{
+	if(uid_len < 4)
+	{
+		return false;
+	}
+	for(size_t i = 0; i < 5; ++i)
+	{
+		if(0 == memcmp(uid, tokens[i], 4))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 
 

@@ -447,14 +447,13 @@ void StartNFCTask(void *argument)
 
     if(r == NFC_OK)
     {
-      if(uid[0] == 0x9a) // TODO: replace this with a universal token validation func, or we can given all tokens the same id
+      if(is_valid_token(uid, uid_len))
       {
     	  // accepted token, send message over UART to MCU A
         UART_SendMessage("TOKEN_VALID");
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
       }
       LATCH_Open(door);
-      vTaskDelay(pdMS_TO_TICKS(10000));
     }
     else if(r == NFC_NO_CARD)
     {
@@ -515,10 +514,11 @@ void StartPS2Task(void *argument)
       strcat(name_message, message_for_LCD);
       UART_SendMessage(name_message);
       osDelay(1000);
-      char level_message[22] = "LEVEL:";
+      char level_message[10] = "LEVEL:";
       char level_number[2] = "0";
       level_number[0] += auth_number;
       strcat(level_message, level_number);
+      UART_SendMessage(level_message);
       osDelay(1000);
     }
     osDelay(1);

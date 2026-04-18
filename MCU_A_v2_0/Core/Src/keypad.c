@@ -149,7 +149,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 
 	char running_class_number[11] = {};
 	int running_idx = 0;
-
+	bool entered_first = false;
 	while(true)
 	{
 		reading_active = true;
@@ -158,6 +158,15 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 		{
 			osMutexAcquire(keypadCbufMutex, portMAX_DELAY);
 			Event_t most_recent;
+			if(!entered_first)
+			{
+				entered_first = true;
+				
+				LCD_BeginFrame();
+				LCD_FillRect(15, 270, 465, 50, 228, 228, 228);
+				LCD_DrawText(15, 270, "Press # to finish selection", 155, 2);
+				LCD_EndFrame();
+			}
 			if(!cbuf_peek_back(&keypad_events,&most_recent))
 			{
 				// Keep reading if buffer is empty (this should never happen)
@@ -173,6 +182,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 				out->number_int = 1;
 				reading_active = false;
 				osMutexRelease(keypadCbufMutex);
+				entered_first = false;
 				return true;
 			}
 			else if(most_recent.decoded == '#')
@@ -185,6 +195,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 					// Class numbers must be 3 chars
 					reading_active = false;
 					osMutexRelease(keypadCbufMutex);
+					entered_first = false;
 					return false;
 				}
 				for(size_t i = 0; i < 3; ++i)
@@ -195,6 +206,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 						// failed to read class digit
 						reading_active = false;
 						osMutexRelease(keypadCbufMutex);
+						entered_first = false;
 						return false;
 					}
 					if(!isdigit(class_num.decoded))
@@ -202,6 +214,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 						// must be a digit
 						reading_active = false;
 						osMutexRelease(keypadCbufMutex);
+						entered_first = false;
 						return false;
 					}
 					out->number_string[i] = class_num.decoded;
@@ -212,6 +225,7 @@ bool KEYPAD_PromptClassNumber(Class_t* out)
 				out->number_int = atoi(out->number_string);
 				reading_active = false;
 				osMutexRelease(keypadCbufMutex);
+				entered_first = false;
 				return true;
 			}
 			else

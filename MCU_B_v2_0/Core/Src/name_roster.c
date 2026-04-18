@@ -16,12 +16,12 @@ static const char *student_roster[] = {
     "upadhyay", "unadkat", "bakker", "brown", "murphy", "thornton",
     "schmalenberg", "tilwankar", "nimmagadda", "vilayan", "valecha", "wong",
     "vandevoorde", "carlson", "weingarden", "hairston", "ko", "ranjan", "la",
-    "rossi", "zhao", "brehob", "salehi", "chang",
+    "rossi", "zhao", "brehob", "salehi", "chang", "zhu",
+    "carl", "mccloskey", "akhmatdinov", "desai", "koduru", "lee"
 };
 
 static const char *admin_roster[] = {
-    "greco", "pickos", "strayhorn", "zhu",
-    "carl", "mccloskey", "akhmatdinov", "desai", "koduru", "lee",
+    "greco", "pickos", "strayhorn"
 };
 
 static const uint8_t tokens[5][4] =
@@ -38,7 +38,7 @@ static const uint8_t tokens[5][4] =
 
 int auth(char * message_from_mag, char * name_for_LCD)
 {
-	uint8_t cursor;;
+	uint8_t cursor;
     memset(name_for_LCD, 0, 16);
 	//fast forward until you hit the '/' character
 	//this should mark the end of the user's last name

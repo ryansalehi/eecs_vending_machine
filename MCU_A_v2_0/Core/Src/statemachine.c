@@ -222,7 +222,7 @@ void SM_UnlockVault(State_ctx_t* ctx)
 {
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 219, 228, 228, 228); // fill working area with white
-    LCD_DrawText(38, 128, "Vault unlocked. Open quickly.", 45, 3);
+    LCD_DrawText(38, 128, "Vault unlocked.", 45, 3);
     LCD_DrawText(38, 156, "Combustion Imminent.", 45, 3);
     LCD_EndFrame();
 

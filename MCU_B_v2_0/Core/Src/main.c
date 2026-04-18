@@ -459,6 +459,11 @@ void StartNFCTask(void *argument)
         UART_SendMessage("TOKEN_INVLD");
       }
       LATCH_Open(tokendrop); // let the token pass regardless of validity
+      HAL_I2C_DeInit(&hi2c1);
+      osDelay(10);
+      HAL_I2C_Init(&hi2c1);
+      osDelay(10);
+      NFC_Init();
     }
     else if(r == NFC_NO_CARD)
     {
@@ -512,9 +517,6 @@ void StartPS2Task(void *argument)
       decoded_string[decoded_length] = '\0'; // null terminate
       char message_for_LCD[16];
       int auth_number = auth(decoded_string, message_for_LCD);
-      if (auth_number == 2){
-        LATCH_Open(door);
-      }
       char name_message[22] = "MCARD:";
       strcat(name_message, message_for_LCD);
       UART_SendMessage(name_message);
@@ -524,6 +526,9 @@ void StartPS2Task(void *argument)
       level_number[0] += auth_number;
       strcat(level_message, level_number);
       UART_SendMessage(level_message);
+      if (auth_number == 2){
+        LATCH_Open(door);
+      }
       osDelay(1000);
     }
     osDelay(1);

@@ -1,11 +1,4 @@
-# EECS 373 Project: EECS Sticker Vending Machine
-
-![Header image of EECS Stickers, displayed on the top of the LCD](Project_Images/header.png)
-
-Luqin Chang, Matteo Greco, Jacob Pickos, Ryan Salehi, Asher Strayhorn
-
-March - April 2026
-
+# EECS Sticker Vending Machine
 ![Poster for Project Expo](Project_Images/EECS-Vending-Poster.png)
 
 # MCU_A Pinout

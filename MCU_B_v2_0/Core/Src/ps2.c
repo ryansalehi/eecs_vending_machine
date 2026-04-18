@@ -20,6 +20,8 @@ static volatile uint8_t ps2_message[PS2_MESSAGE_MAX];
 static volatile uint16_t ps2_message_length = 0;
 static volatile bool ps2_message_ready = false;
 static volatile uint32_t ps2_last_byte_tick = 0;
+static bool first_hit = false;
+static uint32_t first_tick = 0;
 
 static uint8_t PS2_ReadDataPin(void);
 static bool PS2_CheckOddParity(uint8_t data, uint8_t parity_bit);
@@ -64,6 +66,7 @@ void PS2_Init(void)
     ps2_message_ready = false;
     ps2_last_byte_tick = 0;
     ps2_inited = true;
+    first_hit = false;
 }
 
 bool PS2_Inited()
@@ -184,6 +187,15 @@ bool PS2_ReadFailed(void)
 	return ps2_read_failed;
 }
 
+void PS2_CheckTimeout()
+{
+    if(!first_hit)
+    {
+        first_hit = true;
+        first_tick = HAL_GetTick();
+    }
+}
+
 //gives you the decoded byte when it is ready
 bool PS2_GetByte(uint8_t *byte)
 {
@@ -200,6 +212,11 @@ bool PS2_GetByte(uint8_t *byte)
 // allows us to receive multi-byte messages that arrive within the timeout period (25 ms)
 void PS2_CheckMessageTimeout(void)
 {
+    if(HAL_GetTick() - first_tick > 1000)
+    {
+        PS2_Init();
+        return;
+    }
     if ((ps2_message_length > 0U) &&
         (ps2_message_ready == false) &&
         ((HAL_GetTick() - ps2_last_byte_tick) > PS2_MESSAGE_TIMEOUT_MS))
@@ -207,6 +224,15 @@ void PS2_CheckMessageTimeout(void)
         ps2_message_ready = true;
     }
 }
+
+// void PS2_GlobalTimeout(void)
+// {
+//     if((ps2_message_length >0U && 
+//         (HAL_GetTick() - ps2_last_byte_tick) > PS2_MESSAGE_TIMEOUT_MS))
+//         {
+//             PS2_Init();
+//         }
+// }
 
 //set by PS2_CheckMessageTimeout after 25 ms has elapsed letting us know we are safe to
 //decode the full multi-byte message.
@@ -288,4 +314,5 @@ static void PS2_ResetFrame(void)
     ps2_bit_count = 0;
     ps2_current_byte = 0;
     ps2_parity_bit = 0;
+    first_hit = false;
 }

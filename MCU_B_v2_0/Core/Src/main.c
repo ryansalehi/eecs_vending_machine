@@ -411,6 +411,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
   if(GPIO_Pin == PS_2_Clock_Pin)
   {
+    PS2_CheckTimeout();
     if(PS2_Inited())
     {
       PS2_ClockEdgeFromIsr();

@@ -4,9 +4,9 @@
 
 Luqin Chang, Matteo Greco, Jacob Pickos, Ryan Salehi, Asher Strayhorn
 
-Spring 2026
+March - April 2026
 
-TODO: Put revised proposal here
+![Poster for Project Expo](Project_Images/EECS-Vending-Poster.png)
 
 # MCU_A Pinout
 LCD:
@@ -34,8 +34,6 @@ Motors:
 - PB5 EN2
 - PB13 EN3
 - PB14 EN4
-
-////////////////////////////
 
 # MCU_B Pinout
 Token NFC:

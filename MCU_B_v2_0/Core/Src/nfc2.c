@@ -47,9 +47,9 @@ static TaskHandle_t s_waiting_task = NULL;
 
 /* ---------- Low-level helpers ---------- */
 
-static bool pn532_i2c_write(const uint8_t *buf, uint16_t len)
+static HAL_StatusTypeDef pn532_i2c_write(const uint8_t *buf, uint16_t len)
 {
-    return (HAL_I2C_Master_Transmit(&hi2c1, PN532_I2C_ADDR, (uint8_t *)buf, len, 100) == HAL_OK);
+    return HAL_I2C_Master_Transmit(&hi2c1, PN532_I2C_ADDR, (uint8_t *)buf, len, 100);
 }
 
 static bool pn532_i2c_read(uint8_t *buf, uint16_t len)
@@ -112,7 +112,12 @@ static bool pn532_write_frame(const uint8_t *cmd, uint8_t cmd_len)
     frame[6 + cmd_len] = (uint8_t)(~sum + 1u); /* DCS */
     frame[7 + cmd_len] = PN532_POSTAMBLE;
 
-    return pn532_i2c_write(frame, (uint16_t)(8u + cmd_len));
+    HAL_StatusTypeDef ret = pn532_i2c_write(frame, (uint16_t)(8u + cmd_len));
+    if(ret != HAL_OK)
+    {
+        return false;
+    }
+    return true;
 }
 
 static NFC_Result_t pn532_read_ack(uint32_t timeout_ms)

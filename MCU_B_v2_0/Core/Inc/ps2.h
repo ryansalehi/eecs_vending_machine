@@ -33,4 +33,7 @@ uint16_t PS2_GetMessage(uint8_t *buffer, uint16_t buffer_size);
 char PS2_ScanCodeToAscii(uint8_t scan_code);
 
 void PS2_ClearMessage(void);
+
+
+void PS2_CheckTimeout();
 #endif /* PS2_H */

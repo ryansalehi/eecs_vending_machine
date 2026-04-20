@@ -528,7 +528,8 @@ void StartPS2Task(void *argument)
       message_to_send[30] = level_number;
       message_to_send[31] = '\0';
       UART_SendMessage(message_to_send);
-      if (auth_number == 2){
+      if (auth_number == 2)
+      {
         osDelay(1000);
         LATCH_Open(door);
       }

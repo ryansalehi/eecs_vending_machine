@@ -87,6 +87,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
+static volatile uint8_t whoami = 0;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

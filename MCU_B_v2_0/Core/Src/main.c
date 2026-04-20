@@ -138,6 +138,7 @@ int main(void)
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
   PS2_Init();
+  UART_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -451,6 +452,7 @@ void StartNFCTask(void *argument)
       if(is_valid_token(uid, uid_len))
       {
     	  // accepted token, send message over UART to MCU A
+
         UART_SendMessage("TOKEN_VALID");
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
       }
@@ -517,16 +519,17 @@ void StartPS2Task(void *argument)
       decoded_string[decoded_length] = '\0'; // null terminate
       char message_for_LCD[16];
       int auth_number = auth(decoded_string, message_for_LCD);
-      char name_message[22] = "MCARD:";
-      strcat(name_message, message_for_LCD);
-      UART_SendMessage(name_message);
-      osDelay(1000);
-      char level_message[10] = "LEVEL:";
-      char level_number[2] = "0";
-      level_number[0] += auth_number;
-      strcat(level_message, level_number);
-      UART_SendMessage(level_message);
+      char message_to_send[32];
+      memset(message_to_send, 0, sizeof(message_to_send));
+      strcat(message_to_send, "MC:");
+      strcat(message_to_send, message_for_LCD);
+      char level_number = '0';
+      level_number += auth_number;
+      message_to_send[30] = level_number;
+      message_to_send[31] = '\0';
+      UART_SendMessage(message_to_send);
       if (auth_number == 2){
+        osDelay(1000);
         LATCH_Open(door);
       }
       osDelay(1000);

@@ -163,6 +163,7 @@ int main(void)
   /* USER CODE BEGIN RTOS_MUTEX */
   LCD_Init();
   KEYPAD_Init();
+  UART_Init();
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -211,8 +212,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
+    osDelay(5000);
+
   }
   /* USER CODE END 3 */
 }

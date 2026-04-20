@@ -1,6 +1,8 @@
 #ifndef SENDER_H
 #define SENDER_H
 
+void UART_Init();
+
 // helper function for sending an open door message to the security box
 void UART_SendMessage(char* message);
 

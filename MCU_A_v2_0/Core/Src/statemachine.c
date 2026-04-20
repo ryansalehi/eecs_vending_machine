@@ -121,27 +121,24 @@ void SM_Idle(State_ctx_t* ctx)
     // Get MCard Name
     while(true)
     {
-        if(ctx->name_set)
+        if(ctx->name_set) {
+        	if (ctx->level_set)
         {
             break;
         }
-        // else we stay idling
-    }
-    // Get MCard Level
-    uint32_t start_wait = HAL_GetTick();
-    while(true)
-    {
-        if((HAL_GetTick() - start_wait) > 5000) // wait 5s max for the level to come in after the name
-        {
-            // didn't get response
-            next_state = SM_Denied;
-            return;
-        }
-        if(ctx->level_set)
-        {
-            break;
         }
     }
+
+//    uint32_t start_wait = HAL_GetTick();
+//    while(true)
+//    {
+//        if((HAL_GetTick() - start_wait) > 5000) // wait 5s max for the level to come in after the name
+//        {
+//            // didn't get response
+//            next_state = SM_Denied;
+//            return;
+//        }
+//    }
 
     LCD_BeginFrame();
     LCD_FillRect(0, 71, 480, 249, 228, 228, 228); // fill working area with white

@@ -125,6 +125,20 @@ void KEYPAD_ReadAnyPresses()
 		KEYPAD_Write(KEYPAD_INT_STAT, 0xFF);
 		osMutexRelease(keypadCbufMutex);
 	}
+	else if(key_press && !reading_active)
+	{
+		osMutexAcquire(keypadCbufMutex, portMAX_DELAY);
+		key_press = false;
+		uint8_t count = KEYPAD_Read(KEYPAD_EVENT_COUNT) & 0x0F; // count is only the bottom 4 bits 
+
+		while (count--)
+		{
+			uint8_t key = KEYPAD_Read(KEYPAD_EVENT_A);
+		}
+		
+		KEYPAD_Write(KEYPAD_INT_STAT, 0xFF);
+		osMutexRelease(keypadCbufMutex);
+	}
 }
 
 bool KEYPAD_PromptClassNumber(Class_t* out)

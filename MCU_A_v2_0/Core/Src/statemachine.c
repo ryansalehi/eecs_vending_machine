@@ -176,6 +176,9 @@ void SM_NFCWait(State_ctx_t* ctx)
     LCD_DrawText(38, 175, "Machine will time out in 20 seconds.", 45, 2);
     LCD_EndFrame();
 
+    ctx->token_set = false;
+    ctx->invalid_token = false;
+
     // Get token reading
     uint32_t start_wait = HAL_GetTick();
     while(true)
